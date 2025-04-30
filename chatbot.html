@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoGuide GPT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            
+            background-size: cover;
+            background-position: center;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.6); /* Transparent layer on top of background */
+        }
+
+        .header {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .brain-icon {
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+
+        .select-container {
+            margin-left: 0.5rem;
+        }
+
+        .select-container select {
+            background: #fff;
+            color: black;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .chat-box {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .input-container {
+            padding: 1rem;
+            border-top: 1px solid #444;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+        }
+
+        .input-container input {
+            flex-grow: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 1.5rem;
+            background: #3c3c3c;
+            color: white;
+            margin-right: 0.5rem;
+        }
+
+        .input-container button {
+            padding: 0.75rem;
+            background: #4a4a4a;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background: #5a5a5a;
+        }
+
+        .chat-mode-container label {
+            margin-right: 1rem;
+            color: white; /* Ensuring the text is visible */
+        }
+
+        .chat-mode-container input {
+            margin-right: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-brain brain-icon"></i>GeoGuide GPT</h1>
+
+            <!-- Chat Mode Radio Options -->
+            <div class="chat-mode-container">
+                <label>
+                    <input type="radio" name="chat-mode" value="GeoGuide GPT" checked> GeoGuide GPT
+                </label>
+            </div>
+
+            <!-- Language Selection Dropdown -->
+            <div class="select-container">
+                <select id="language-select">
+                    <option value="en">English</option>
+                    <option value="hi">Hindi</option>
+                    <option value="ta">Tamil</option>
+                    <option value="ru">Russian</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Chat Box -->
+        <div id="chat-box" class="chat-box">
+            <!-- Chat messages will be appended here -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-container">
+            <input id="user-input" placeholder="Type a message..." type="text" />
+            <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script src="scriptt.js"></script>
+    <script type="importmap">
+        {
+          "imports": {
+            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+          }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin-top: 20px;
+  display: flex; /* Use flexbox to arrange form and map side by side */
+  gap: 20px; /* Add space between the form and the map */
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 1.2em;  /* Smaller header size */
+  text-align: center;
+  width: 100%;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 40%; /* Adjust this width to make sure the form takes up less space */
+}
+
+.input-section {
+  width: 100%;
+  text-align: left;
+  font-size: 0.9em;  /* Smaller font size */
+  margin-bottom: 10px;
+}
+
+input[type="text"], input[type="number"], input[type="checkbox"] {
+  padding: 5px;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+  width: 180px;
+}
+
+button {
+  padding: 8px 16px;
+  font-size: 0.9em;  /* Smaller button size */
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  width: 180px;
+  margin-top: 10px;
+}
+
+#map {
+  width: 60%; /* Map will take 60% of the screen */
+  height: 400px;
+  border: 1px solid #ddd;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;  /* Stack form and map vertically on small screens */
+  }
+
+  .form-container {
+    width: 100%;
+  }
+
+  #map {
+    height: 300px;  /* Smaller map on mobile */
+  }
+
+  input[type="text"], input[type="number"], input[type="checkbox"] {
+    width: 90%;  /* Make form inputs wider on small screens */
+  }
+
+  button {
+    width: 90%;  /* Make button wider on small screens */
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
