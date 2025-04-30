@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return fetch('https://api.cohere.ai/v1/generate', {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer NN3xUMt133W5CMHQbXmtNrQwMIpWsvjA5G8AhRWk', // Replace with your Cohere API key
+                'Authorization': 'Bearer IlmEUAfBehgx70V1v564OUj37tDHxaztukGOd3LX', // Replace with your Cohere API key
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return fetch('https://api.cohere.ai/v1/generate', {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Bearer NN3xUMt133W5CMHQbXmtNrQwMIpWsvjA5G8AhRWk', // Replace with your Cohere API key
+                    'Authorization': 'Bearer XxxFtipnDhPlvCicRc3cElrbwDhA0100T6zWxGwz', // Replace with your Cohere API key
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({

@@ -18,7 +18,11 @@ function generateResponse(location, amenities, universityName, universityDistanc
   return fetch('https://api.cohere.ai/v1/generate', {
       method: 'POST',
       headers: {
-          'Authorization': 'Bearer D53GQXqAPveLN0nbdBv5ndmC4psF0vFy7ueQf05S', // Replace with your Cohere API key
+          'Authorization': 'Bearer XxxFtipnDhPlvCicRc3cElrbwDhA0100T6zWxGwz', // Replace with your Cohere API key
+          
+    
+          
+
           'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -122,17 +126,3 @@ function addClustersToMap(clusters) {
 
 // Event listener for the "Show Clusters" button
 document.getElementById("showClustersBtn").addEventListener("click", fetchAndDisplayClusters);
-
-
-
-
-
-
-
-
-
-
-
-
-
-

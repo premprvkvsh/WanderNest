@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return fetch('https://api.cohere.ai/v1/generate', {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer u90EXvZ2oXdPekBmB7vA9HfwAeEvazDdBuRcSnsB', // Replace with your Cohere API key
+                'Authorization': 'Bearer 27R0L0qxF1HS33MDKuehw75pzcepmY2QFwW4UliW', // Replace with your Cohere API key
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
