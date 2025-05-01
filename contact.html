@@ -1,14 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Contact | WanderNest</title>
+  <meta charset="UTF-8">
+  <title>Contact Us | WanderNest</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .contact-card {
+      transition: all 0.3s ease;
+      transform-style: preserve-3d;
+    }
+    .contact-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .input-field:focus {
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+    }
+    .map-container {
+      height: 100%;
+      min-height: 300px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .floating-label {
+      transition: all 0.2s ease;
+      transform-origin: left top;
+    }
+    .input-field:focus + .floating-label,
+    .input-field:not(:placeholder-shown) + .floating-label {
+      transform: translateY(-1.2rem) scale(0.85);
+      color: #4f46e5;
+    }
+  </style>
 </head>
-<body class="bg-yellow-100 font-roboto p-8">
-  <a href="index.html" class="underline text-blue-700">&larr; Back to Home</a>
-  <h1 class="text-4xl font-bold font-playfair mt-4">Contact Us</h1>
-  <p class="mt-4 text-lg">Have questions or feedback?</p>
-  <p class="text-lg mt-2">Email: <a class="text-blue-700 underline" href="mailto:support@wandernest.ai">support@wandernest.ai</a></p>
+<body class="bg-gray-50 font-roboto">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Back button and header -->
+    <div class="mb-8">
+      <a href="index.html" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+        </svg>
+        Back to Home
+      </a>
+      <h1 class="text-4xl md:text-5xl font-bold font-playfair mt-4 text-gray-800">Contact WanderNest</h1>
+      <p class="text-lg text-gray-600 mt-2">We'd love to hear from you! Reach out anytime.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <!-- Contact Form -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="p-8">
+          <h2 class="text-2xl font-bold font-playfair text-gray-800 mb-6">Send us a message</h2>
+          <form id="contactForm" class="space-y-6">
+            <div class="relative">
+              <input type="text" id="name" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder=" " required>
+              <label for="name" class="floating-label absolute left-4 top-3 text-gray-500 pointer-events-none">Full Name</label>
+            </div>
+            
+            <div class="relative">
+              <input type="email" id="email" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder=" " required>
+              <label for="email" class="floating-label absolute left-4 top-3 text-gray-500 pointer-events-none">Email Address</label>
+            </div>
+            
+            <div class="relative">
+              <select id="subject" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none bg-white">
+                <option value="" disabled selected>Select a subject</option>
+                <option value="general">General Inquiry</option>
+                <option value="technical">Technical Support</option>
+                <option value="feedback">Feedback/Suggestions</option>
+                <option value="partnership">Partnership Opportunities</option>
+              </select>
+              <label for="subject" class="floating-label absolute left-4 top-3 text-gray-500 pointer-events-none">Subject</label>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+            </div>
+            
+            <div class="relative">
+              <textarea id="message" rows="5" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder=" " required></textarea>
+              <label for="message" class="floating-label absolute left-4 top-3 text-gray-500 pointer-events-none">Your Message</label>
+            </div>
+            
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+              <span id="submitText">Send Message</span>
+              <svg id="submitSpinner" class="animate-spin -mr-1 ml-3 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Contact Info and Map -->
+      <div class="space-y-8">
+        <!-- Contact Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="contact-card bg-white p-6 rounded-xl shadow-md border-t-4 border-blue-500">
+            <div class="flex items-start">
+              <div class="bg-blue-100 p-3 rounded-full mr-4">
+                <i class="fas fa-phone-alt text-blue-600"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg text-gray-800">Call Us</h3>
+                <p class="text-gray-600 mt-1">+91 6204704380</p>
+                <a href="tel:+916204704380" class="inline-block mt-2 text-blue-600 hover:text-blue-800 transition-colors duration-200 text-sm font-medium">
+                  Call Now <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="contact-card bg-white p-6 rounded-xl shadow-md border-t-4 border-green-500">
+            <div class="flex items-start">
+              <div class="bg-green-100 p-3 rounded-full mr-4">
+                <i class="fas fa-envelope text-green-600"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg text-gray-800">Email Us</h3>
+                <p class="text-gray-600 mt-1">it21049@glbitm.ac.in</p>
+                <a href="mailto:it21049@glbitm.ac.in" class="inline-block mt-2 text-green-600 hover:text-green-800 transition-colors duration-200 text-sm font-medium">
+                  Email Now <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="contact-card bg-white p-6 rounded-xl shadow-md border-t-4 border-purple-500">
+            <div class="flex items-start">
+              <div class="bg-purple-100 p-3 rounded-full mr-4">
+                <i class="fas fa-map-marker-alt text-purple-600"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg text-gray-800">Visit Us</h3>
+                <p class="text-gray-600 mt-1">B-88, Gamma 2<br>Greater Noida, UP 201310</p>
+                <a href="#map" class="inline-block mt-2 text-purple-600 hover:text-purple-800 transition-colors duration-200 text-sm font-medium">
+                  View Map <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="contact-card bg-white p-6 rounded-xl shadow-md border-t-4 border-yellow-500">
+            <div class="flex items-start">
+              <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                <i class="fas fa-clock text-yellow-600"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg text-gray-800">Hours</h3>
+                <p class="text-gray-600 mt-1">Monday - Friday: 9am - 6pm<br>Saturday: 10am - 4pm</p>
+                <button class="mt-2 text-yellow-600 hover:text-yellow-800 transition-colors duration-200 text-sm font-medium">
+                  Book Appointment <i class="fas fa-arrow-right ml-1"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map -->
+        <div id="map" class="map-container bg-white rounded-xl shadow-md overflow-hidden">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.156203511501!2d-122.4199066846821!3d37.77492997975923!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80859a6d00690021%3A0x4a501367f076adff!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus" 
+                  width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+
+        <!-- Social Media -->
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="font-bold text-lg text-gray-800 mb-4">Connect With Us</h3>
+          <div class="flex space-x-4">
+            <a href="#" class="social-icon w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors duration-200">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-icon w-10 h-10 rounded-full bg-blue-400 text-white flex items-center justify-center hover:bg-blue-500 transition-colors duration-200">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="social-icon w-10 h-10 rounded-full bg-pink-600 text-white flex items-center justify-center hover:bg-pink-700 transition-colors duration-200">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="social-icon w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center hover:bg-red-700 transition-colors duration-200">
+              <i class="fab fa-youtube"></i>
+            </a>
+            <a href="#" class="social-icon w-10 h-10 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-900 transition-colors duration-200">
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Form submission handling
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const submitText = document.getElementById('submitText');
+      const submitSpinner = document.getElementById('submitSpinner');
+      
+      // Show loading state
+      submitText.textContent = 'Sending...';
+      submitSpinner.classList.remove('hidden');
+      submitBtn.disabled = true;
+      
+      // Simulate form submission
+      setTimeout(() => {
+        // Hide loading state
+        submitText.textContent = 'Message Sent!';
+        submitSpinner.classList.add('hidden');
+        
+        // Show success message
+        alert('Thank you for your message! We will get back to you soon.');
+        
+        // Reset form
+        setTimeout(() => {
+          e.target.reset();
+          submitText.textContent = 'Send Message';
+          submitBtn.disabled = false;
+        }, 2000);
+      }, 1500);
+    });
+    
+    // Floating labels functionality
+    document.querySelectorAll('.input-field').forEach(input => {
+      const label = input.nextElementSibling;
+      
+      input.addEventListener('focus', () => {
+        label.classList.add('floating');
+      });
+      
+      input.addEventListener('blur', () => {
+        if (!input.value) {
+          label.classList.remove('floating');
+        }
+      });
+      
+      // Initialize on page load if field has value
+      if (input.value) {
+        label.classList.add('floating');
+      }
+    });
+  </script>
 </body>
 </html>
