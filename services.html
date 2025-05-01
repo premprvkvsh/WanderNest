@@ -37,6 +37,47 @@
       color: #4f46e5;
       background-color: #e0e7ff;
     }
+    
+    /* New chatbot icon styles */
+    .chatbot-icon {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background-color: #4f46e5;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    .chatbot-icon:hover {
+      background-color: #6366f1;
+      transform: scale(1.1);
+    }
+    .chatbot-icon i {
+      font-size: 24px;
+    }
+    .chatbot-tooltip {
+      position: absolute;
+      right: 70px;
+      background-color: #4f46e5;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .chatbot-icon:hover .chatbot-tooltip {
+      opacity: 1;
+    }
   </style>
 </head>
 <body class="bg-yellow-50 font-roboto min-h-screen">
@@ -231,6 +272,12 @@
     </div>
   </div>
 
+  <!-- Floating Wander AI Chatbot Icon -->
+  <a href="chatbot.html" class="chatbot-icon">
+    <i class="fas fa-robot"></i>
+    <span class="chatbot-tooltip">Wander AI Assistant</span>
+  </a>
+
   <script>
     // Mobile menu toggle
     const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -313,7 +360,5 @@
       });
     });
   </script>
-
-  
 </body>
 </html>
