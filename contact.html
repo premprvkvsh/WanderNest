@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Previous styles remain the same */
     .contact-card {
       transition: all 0.3s ease;
       transform-style: preserve-3d;
@@ -47,6 +48,47 @@
     .mobile-menu a.current {
       color: #4f46e5;
       background-color: #e0e7ff;
+    }
+    
+    /* New chatbot icon styles */
+    .chatbot-icon {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background-color: #4f46e5;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    .chatbot-icon:hover {
+      background-color: #6366f1;
+      transform: scale(1.1);
+    }
+    .chatbot-icon i {
+      font-size: 24px;
+    }
+    .chatbot-tooltip {
+      position: absolute;
+      right: 70px;
+      background-color: #4f46e5;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .chatbot-icon:hover .chatbot-tooltip {
+      opacity: 1;
     }
   </style>
 </head>
@@ -94,6 +136,7 @@
     </div>
   </nav>
 
+  <!-- Rest of your contact page content remains the same -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <h1 class="text-4xl md:text-5xl font-bold font-playfair text-gray-800">Contact WanderNest</h1>
     <p class="text-lg text-gray-600 mt-2">We'd love to hear from you! Reach out anytime.</p>
@@ -241,6 +284,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Floating Wander AI Chatbot Icon -->
+  <a href="chatbot.html" class="chatbot-icon">
+    <i class="fas fa-robot"></i>
+    <span class="chatbot-tooltip">Wander AI Assistant</span>
+  </a>
 
   <script>
     // Mobile menu toggle
