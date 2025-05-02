@@ -77,6 +77,47 @@
       transform: translateY(-1.2rem) scale(0.85);
       color: #4f46e5;
     }
+    
+    /* New chatbot icon styles */
+    .chatbot-icon {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background-color: #4f46e5;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    .chatbot-icon:hover {
+      background-color: #6366f1;
+      transform: scale(1.1);
+    }
+    .chatbot-icon i {
+      font-size: 24px;
+    }
+    .chatbot-tooltip {
+      position: absolute;
+      right: 70px;
+      background-color: #4f46e5;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .chatbot-icon:hover .chatbot-tooltip {
+      opacity: 1;
+    }
   </style>
 </head>
 <body class="bg-gray-50 font-roboto">
@@ -94,7 +135,7 @@
           <a href="about.html" class="nav-link current px-1 pt-1 text-sm font-medium text-gray-900">About</a>
           <a href="services.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Services</a>
           <a href="contact.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Contact</a>
-          <a href="index.html#booking" class="ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200">
+          <a href="wandernest.html" class="ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200">
             Book Now
           </a>
         </div>
@@ -459,6 +500,12 @@
     </div>
   </section>
 
+  <!-- Floating Wander AI Chatbot Icon -->
+  <a href="chatbot.html" class="chatbot-icon">
+    <i class="fas fa-robot"></i>
+    <span class="chatbot-tooltip">Wander AI Assistant</span>
+  </a>
+
   <script>
     // Mobile menu toggle
     const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -525,9 +572,5 @@
       });
     });
   </script>
-
-  
-
-  
 </body>
 </html>
