@@ -11,6 +11,21 @@
     .team-card:hover .team-img {
       transform: scale(1.05);
     }
+
+
+    /* Logo animation */
+    .logo {
+      transition: all 0.3s ease;
+    }
+    .logo:hover {
+      transform: scale(1.05) rotate(-2deg);
+    }
+    .logo-icon {
+      transition: all 0.3s ease;
+    }
+    .logo:hover .logo-icon {
+      transform: rotate(15deg);
+    }
     
     /* Timeline Styling */
     .timeline-item::before {
@@ -121,18 +136,20 @@
   </style>
 </head>
 <body class="bg-gray-50 font-roboto">
+
   <!-- Permanent Navbar -->
-  <nav class="navbar bg-white sticky top-0 z-50">
+   <nav class="navbar bg-white sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex items-center">
-          <a href="index.html" class="text-xl font-bold font-playfair text-gray-900">
+          <a href="index.html" class="logo text-xl font-bold font-playfair text-gray-900 flex items-center">
+            <i class="fas fa-map-marker-alt logo-icon text-indigo-600 mr-2"></i>
             Wander<span class="text-indigo-600">Nest</span>
           </a>
         </div>
         <div class="hidden md:flex items-center space-x-8">
-          <a href="index.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Home</a>
-          <a href="about.html" class="nav-link current px-1 pt-1 text-sm font-medium text-gray-900">About</a>
+          <a href="index.html" class="nav-link current px-1 pt-1 text-sm font-medium text-gray-900">Home</a>
+          <a href="about.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">About</a>
           <a href="services.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Services</a>
           <a href="contact.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Contact</a>
           <a href="wandernest.html" class="ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200">
@@ -149,20 +166,20 @@
         </div>
       </div>
     </div>
-
     <!-- Mobile menu -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
-      <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="index.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">Home</a>
-        <a href="about.html" class="block px-3 py-2 text-base font-medium text-indigo-600 bg-indigo-50 current">About</a>
-        <a href="services.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">Services</a>
-        <a href="contact.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">Contact</a>
-        <a href="index.html#booking" class="block w-full px-3 py-2 mt-2 text-center text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md">
-          Book Now
-        </a>
+     
+     <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+          <a href="index.html" class="block px-3 py-2 text-base font-medium text-indigo-600 bg-indigo-50 current">Home</a>
+          <a href="about.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">About</a>
+          <a href="services.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">Services</a>
+          <a href="contact.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">Contact</a>
+          <a href="#booking" class="block w-full px-3 py-2 mt-2 text-center text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md">
+            Book Now
+          </a>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
   <!-- Hero Section -->
   <section class="relative py-20 overflow-hidden">
