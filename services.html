@@ -246,7 +246,7 @@
     }
   </style>
 </head>
-<body class="bg-yellow-50 font-roboto min-h-screen">
+<body class="bg-white font-roboto min-h-screen">
   <!-- Permanent Navbar -->
   <nav class="navbar bg-white sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -392,7 +392,7 @@
       </div>
       <div class="text-center">
         <div class="text-3xl md:text-4xl font-bold text-indigo-600 mb-2" id="stat4">0</div>
-        <div class="text-gray-600">Countries Available</div>
+        <div class="text-gray-600">Cities Available</div>
       </div>
     </div>
 
@@ -462,7 +462,7 @@
     </section>
 
     <!-- Video Demo Section -->
-    <section class="mt-16 bg-white rounded-xl shadow-md overflow-hidden">
+    <!-- <section class="mt-16 bg-white rounded-xl shadow-md overflow-hidden">
       <div class="md:flex">
         <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
           <h2 class="text-3xl font-bold font-playfair mb-4 text-gray-800">See WanderNest in Action</h2>
@@ -485,7 +485,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- FAQ Section -->
     <div class="mt-16 mb-10">
@@ -687,9 +687,9 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           animateValue('stat1', 0, 12500, 2000);
-          animateValue('stat2', 0, 8500, 2000);
-          animateValue('stat3', 0, 1200, 2000);
-          animateValue('stat4', 0, 65, 2000);
+          animateValue('stat2', 0, 850, 2000);
+          animateValue('stat3', 0, 120, 2000);
+          animateValue('stat4', 0, 18, 2000);
           observer.unobserve(entry.target);
         }
       });
@@ -742,17 +742,17 @@
     // });
 
     // Service card click handler
-    document.querySelectorAll('.service-card').forEach(card => {
-      card.addEventListener('click', function(e) {
-        // Only navigate if click wasn't on a link inside the card
-        if (!e.target.closest('a')) {
-          const link = this.querySelector('a');
-          if (link) {
-            link.click();
-          }
-        }
-      });
-    });
+    // document.querySelectorAll('.service-card').forEach(card => {
+    //   card.addEventListener('click', function(e) {
+    //     // Only navigate if click wasn't on a link inside the card
+    //     if (!e.target.closest('a')) {
+    //       const link = this.querySelector('a');
+    //       if (link) {
+    //         link.click();
+    //       }
+    //     }
+    //   });
+    // });
   </script>
 </body>
 </html>
