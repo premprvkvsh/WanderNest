@@ -3,49 +3,93 @@
 <head>
   <meta charset="UTF-8" />
   <title>Services | WanderNest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://unpkg.com/scrollreveal"></script>
+  <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
   <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #6366f1;
+      --primary-lighter: #818cf8;
+      --primary-bg: #e0e7ff;
+    }
+    
+    body {
+      scroll-behavior: smooth;
+    }
+    
     .service-card {
       transition: all 0.3s ease;
       transform-style: preserve-3d;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    
     .service-card:hover {
-      transform: translateY(-5px) scale(1.02);
+      transform: translateY(-8px);
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
+    
+    .service-card:hover::before {
+      transform: scaleX(1);
+    }
+    
     .service-icon {
       transition: all 0.3s ease;
     }
+    
     .service-card:hover .service-icon {
       transform: rotate(5deg) scale(1.1);
     }
+    
     .navbar {
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    .nav-link.current {
-      color: #4f46e5;
-      border-bottom: 3px solid #4f46e5;
-    }
-    .nav-link:hover:not(.current) {
-      color: #4f46e5;
-      border-bottom: 3px solid #e0e7ff;
-    }
-    .mobile-menu a.current {
-      color: #4f46e5;
-      background-color: #e0e7ff;
+      transition: all 0.3s ease;
     }
     
-    /* New chatbot icon styles */
+    .navbar.scrolled {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255, 255, 255, 0.98);
+    }
+    
+    .nav-link.current {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+    }
+    
+    .nav-link:hover:not(.current) {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary-bg);
+    }
+    
+    .mobile-menu a.current {
+      color: var(--primary);
+      background-color: var(--primary-bg);
+    }
+    
+    /* Chatbot styles */
     .chatbot-icon {
       position: fixed;
       bottom: 30px;
       right: 30px;
       width: 60px;
       height: 60px;
-      background-color: #4f46e5;
+      background-color: var(--primary);
       color: white;
       border-radius: 50%;
       display: flex;
@@ -54,20 +98,25 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       transition: all 0.3s ease;
       z-index: 1000;
+      cursor: pointer;
     }
+    
     .chatbot-icon:hover {
-      background-color: #6366f1;
+      background-color: var(--primary-light);
       transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     }
+    
     .chatbot-icon i {
       font-size: 24px;
     }
+    
     .chatbot-tooltip {
       position: absolute;
       right: 70px;
-      background-color: #4f46e5;
+      background-color: var(--primary);
       color: white;
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 6px;
       font-size: 14px;
       opacity: 0;
@@ -75,8 +124,125 @@
       pointer-events: none;
       white-space: nowrap;
     }
+    
     .chatbot-icon:hover .chatbot-tooltip {
       opacity: 1;
+    }
+    
+    /* Testimonial card hover effect */
+    .testimonial-card {
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .testimonial-card::after {
+      content: '"';
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-family: 'Playfair Display', serif;
+      font-size: 60px;
+      color: var(--primary-bg);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .testimonial-card:hover::after {
+      opacity: 1;
+    }
+    
+    /* FAQ styles */
+    .faq-item {
+      transition: all 0.3s ease;
+    }
+    
+    .faq-item:hover {
+      border-color: var(--primary-lighter);
+    }
+    
+    .faq-question {
+      transition: background-color 0.2s ease;
+    }
+    
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    
+    .faq-answer.active {
+      max-height: 300px;
+      padding: 1.5rem;
+    }
+    
+    /* Ripple effect */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.7);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+    
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+    
+    /* Section headers */
+    .section-header {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-header::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 50%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 3px;
+    }
+    
+    /* Back to top button */
+    .back-to-top {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      opacity: 0;
+      visibility: hidden;
+      z-index: 999;
+      cursor: pointer;
+    }
+    
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .back-to-top:hover {
+      background-color: var(--primary-light);
+      transform: translateY(-3px);
     }
   </style>
 </head>
@@ -86,21 +252,21 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex items-center">
-          <a href="index.html" class="text-xl font-bold font-playfair text-gray-900">
+          <a href="index.html" class="text-xl font-bold font-playfair text-gray-900 hover:text-indigo-600 transition-colors duration-200">
             Wander<span class="text-indigo-600">Nest</span>
           </a>
         </div>
         <div class="hidden md:flex items-center space-x-8">
-          <a href="index.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Home</a>
-          <a href="about.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">About</a>
+          <a href="index.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">Home</a>
+          <a href="about.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">About</a>
           <a href="services.html" class="nav-link current px-1 pt-1 text-sm font-medium text-gray-900">Services</a>
-          <a href="contact.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Contact</a>
-          <a href="wandernest.html" class="ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200">
+          <a href="contact.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">Contact</a>
+          <a href="wandernest.html" class="ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200 shadow-sm hover:shadow-md">
             Book Now
           </a>
         </div>
         <div class="-mr-2 flex md:hidden">
-          <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
+          <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none transition-colors duration-200">
             <span class="sr-only">Open main menu</span>
             <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -113,11 +279,11 @@
     <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
       <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="index.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">Home</a>
-        <a href="about.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">About</a>
+        <a href="index.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200">Home</a>
+        <a href="about.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200">About</a>
         <a href="services.html" class="block px-3 py-2 text-base font-medium text-indigo-600 bg-indigo-50 current">Services</a>
-        <a href="contact.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">Contact</a>
-        <a href="index.html#booking" class="block w-full px-3 py-2 mt-2 text-center text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md">
+        <a href="contact.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200">Contact</a>
+        <a href="index.html#booking" class="block w-full px-3 py-2 mt-2 text-center text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors duration-200 shadow-sm hover:shadow-md">
           Book Now
         </a>
       </div>
@@ -125,11 +291,17 @@
   </nav>
 
   <div class="max-w-6xl mx-auto p-4 md:p-8">
-    <h1 class="text-4xl md:text-5xl font-bold font-playfair mt-6 mb-8 text-gray-800 text-center">Our Services</h1>
+    <h1 class="text-4xl md:text-5xl font-bold font-playfair mt-6 mb-8 text-gray-800 text-center section-header">
+      <span class="relative">Our Services</span>
+    </h1>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+    <p class="text-lg text-gray-600 text-center max-w-3xl mx-auto mb-12">
+      Discover how WanderNest combines cutting-edge technology with personalized service to revolutionize your accommodation search experience.
+    </p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-10">
       <!-- Service Card 1 -->
-      <div class="service-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer border-l-4 border-blue-500">
+      <div class="service-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer">
         <div class="service-icon w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mb-4 mx-auto">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -137,13 +309,17 @@
         </div>
         <h3 class="text-xl font-bold text-center mb-3 text-gray-800">AI Recommendations</h3>
         <p class="text-gray-600 text-center">Smart AI algorithms suggest perfect accommodations based on your preferences and behavior patterns.</p>
-        <a href="https://www.ibm.com/think/topics/recommendation-engine" target="_blank" rel="noopener noreferrer" class="mt-4 mx-auto block px-4 py-2 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200 transition-colors duration-200 text-sm font-medium text-center">
-          Learn More
-        </a>
+        <div class="mt-6 flex justify-center">
+          <a href="https://www.ibm.com/think/topics/recommendation-engine" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200 transition-colors duration-200 text-sm font-medium inline-flex items-center">
+            Learn More <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
       </div>
       
       <!-- Service Card 2 -->
-      <div class="service-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer border-l-4 border-green-500">
+      <div class="service-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer">
         <div class="service-icon w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mb-4 mx-auto">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -151,14 +327,18 @@
           </svg>
         </div>
         <h3 class="text-xl font-bold text-center mb-3 text-gray-800">Smart Mapping</h3>
-        <p class="text-gray-600 text-center">Interactive Leaflet maps with clustering to find nearby accommodations in your desired area.</p>
-        <a href="https://www.ibm.com/docs/en/wm-integration?topic=services-smart-mapping" target="_blank" rel="noopener noreferrer" class="mt-4 mx-auto block px-4 py-2 bg-green-100 text-green-600 rounded-full hover:bg-green-200 transition-colors duration-200 text-sm font-medium text-center">
-          Learn More
-        </a>
+        <p class="text-gray-600 text-center">Interactive maps with clustering to find nearby accommodations in your desired area with distance calculations.</p>
+        <div class="mt-6 flex justify-center">
+          <a href="https://www.ibm.com/docs/en/wm-integration?topic=services-smart-mapping" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-green-100 text-green-600 rounded-full hover:bg-green-200 transition-colors duration-200 text-sm font-medium inline-flex items-center">
+            Learn More <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
       </div>
       
       <!-- Service Card 3 -->
-      <div class="service-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer border-l-4 border-purple-500">
+      <div class="service-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer">
         <div class="service-icon w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-4 mx-auto">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -166,13 +346,17 @@
         </div>
         <h3 class="text-xl font-bold text-center mb-3 text-gray-800">AI Travel Guide</h3>
         <p class="text-gray-600 text-center">24/7 AI chatbot provides personalized travel advice, answers questions, and helps plan your itinerary.</p>
-        <a href="chatbot.html" class="mt-4 mx-auto block px-4 py-2 bg-purple-100 text-purple-600 rounded-full hover:bg-purple-200 transition-colors duration-200 text-sm font-medium text-center">
-          Wander AI
-        </a>
+        <div class="mt-6 flex justify-center">
+          <a href="chatbot.html" class="px-4 py-2 bg-purple-100 text-purple-600 rounded-full hover:bg-purple-200 transition-colors duration-200 text-sm font-medium inline-flex items-center">
+            Try Wander AI <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
       </div>
       
       <!-- Service Card 4 -->
-      <div class="service-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer border-l-4 border-yellow-500">
+      <div class="service-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer">
         <div class="service-icon w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center mb-4 mx-auto">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -181,111 +365,211 @@
           </svg>
         </div>
         <h3 class="text-xl font-bold text-center mb-3 text-gray-800">Student Focused</h3>
-        <p class="text-gray-600 text-center">Special filters to find accommodations with distance calculations student housing near universities.</p>
-        <a href="wandernest.html" class="mt-4 mx-auto block px-4 py-2 bg-yellow-100 text-yellow-600 rounded-full hover:bg-yellow-200 transition-colors duration-200 text-sm font-medium text-center">
-          Explore
-        </a>
+        <p class="text-gray-600 text-center">Special filters to find accommodations with distance calculations to universities and student-friendly pricing.</p>
+        <div class="mt-6 flex justify-center">
+          <a href="wandernest.html" class="px-4 py-2 bg-yellow-100 text-yellow-600 rounded-full hover:bg-yellow-200 transition-colors duration-200 text-sm font-medium inline-flex items-center">
+            Explore Options <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="bg-white rounded-xl shadow-md p-8 mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-bold text-indigo-600 mb-2" id="stat1">0</div>
+        <div class="text-gray-600">Happy Users</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-bold text-indigo-600 mb-2" id="stat2">0</div>
+        <div class="text-gray-600">Properties Listed</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-bold text-indigo-600 mb-2" id="stat3">0</div>
+        <div class="text-gray-600">Universities Covered</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-bold text-indigo-600 mb-2" id="stat4">0</div>
+        <div class="text-gray-600">Countries Available</div>
       </div>
     </div>
 
     <!-- Testimonials -->
-  <section class="py-16 bg-gray-100">
-    <div class="max-w-7xl mx-auto px-6">
-      <h2 class="text-3xl md:text-4xl font-bold font-playfair text-center mb-12">What Our Users Say</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Testimonial 1 -->
-        <div class="bg-white p-6 rounded-xl shadow">
-          <div class="flex items-center mb-4">
-            <img class="h-12 w-12 rounded-full" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah M.">
-            <div class="ml-4">
-              <h4 class="font-bold">Sarah M.</h4>
-              <div class="flex text-yellow-400">
-                ★ ★ ★ ★ ★
-              </div>
-            </div>
-          </div>
-          <p class="text-gray-600 italic">"Found the perfect apartment near my university within my budget. The AI matching saved me so much time!"</p>
-        </div>
+    <section class="py-16 bg-gray-50 rounded-xl mt-16">
+      <div class="max-w-7xl mx-auto px-6">
+        <h2 class="text-3xl md:text-4xl font-bold font-playfair text-center mb-12 section-header">
+          <span class="relative">What Our Users Say</span>
+        </h2>
         
-        <!-- Testimonial 2 -->
-        <div class="bg-white p-6 rounded-xl shadow">
-          <div class="flex items-center mb-4">
-            <img class="h-12 w-12 rounded-full" src="https://randomuser.me/api/portraits/men/32.jpg" alt="David L.">
-            <div class="ml-4">
-              <h4 class="font-bold">David L.</h4>
-              <div class="flex text-yellow-400">
-                ★ ★ ★ ★ ★
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Testimonial 1 -->
+          <div class="testimonial-card bg-white p-6 rounded-xl shadow">
+            <div class="flex items-center mb-4">
+              <img class="h-12 w-12 rounded-full" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah M.">
+              <div class="ml-4">
+                <h4 class="font-bold">Sarah M.</h4>
+                <div class="flex text-yellow-400">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
               </div>
             </div>
+            <p class="text-gray-600">"Found the perfect apartment near my university within my budget. The AI matching saved me so much time!"</p>
           </div>
-          <p class="text-gray-600 italic">"The Wander AI assistant answered all my questions about the neighborhood before I booked. Super helpful!"</p>
-        </div>
-        
-        <!-- Testimonial 3 -->
-        <div class="bg-white p-6 rounded-xl shadow">
-          <div class="flex items-center mb-4">
-            <img class="h-12 w-12 rounded-full" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya K.">
-            <div class="ml-4">
-              <h4 class="font-bold">Priya K.</h4>
-              <div class="flex text-yellow-400">
-                ★ ★ ★ ★ ☆
+          
+          <!-- Testimonial 2 -->
+          <div class="testimonial-card bg-white p-6 rounded-xl shadow">
+            <div class="flex items-center mb-4">
+              <img class="h-12 w-12 rounded-full" src="https://randomuser.me/api/portraits/men/32.jpg" alt="David L.">
+              <div class="ml-4">
+                <h4 class="font-bold">David L.</h4>
+                <div class="flex text-yellow-400">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
               </div>
             </div>
+            <p class="text-gray-600">"The Wander AI assistant answered all my questions about the neighborhood before I booked. Super helpful!"</p>
           </div>
-          <p class="text-gray-600 italic">"As an international student, WanderNest made finding accommodation in a new country so much easier."</p>
+          
+          <!-- Testimonial 3 -->
+          <div class="testimonial-card bg-white p-6 rounded-xl shadow">
+            <div class="flex items-center mb-4">
+              <img class="h-12 w-12 rounded-full" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya K.">
+              <div class="ml-4">
+                <h4 class="font-bold">Priya K.</h4>
+                <div class="flex text-yellow-400">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-600">"As an international student, WanderNest made finding accommodation in a new country so much easier."</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
+    <!-- Video Demo Section -->
+    <section class="mt-16 bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="md:flex">
+        <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+          <h2 class="text-3xl font-bold font-playfair mb-4 text-gray-800">See WanderNest in Action</h2>
+          <p class="text-gray-600 mb-6">Watch our short demo video to see how WanderNest can help you find your perfect accommodation with just a few clicks.</p>
+          <button id="play-video" class="flex items-center justify-center px-6 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors duration-200 w-full md:w-auto">
+            <i class="fas fa-play mr-2"></i> Play Video
+          </button>
+        </div>
+        <div class="md:w-1/2 relative">
+          <div id="video-placeholder" class="h-full w-full bg-gray-200 flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity duration-200">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-play text-white text-xl"></i>
+              </div>
+              <p class="text-gray-700 font-medium">Click to watch demo</p>
+            </div>
+          </div>
+          <div id="video-container" class="hidden h-full w-full">
+            <iframe class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- FAQ Section -->
     <div class="mt-16 mb-10">
-      <h2 class="text-3xl font-bold font-playfair mb-8 text-center text-gray-800">Frequently Asked Questions</h2>
+      <h2 class="text-3xl font-bold font-playfair mb-8 text-center text-gray-800 section-header">
+        <span class="relative">Frequently Asked Questions</span>
+      </h2>
       <div class="max-w-3xl mx-auto space-y-4">
-        <div class="border border-gray-200 rounded-lg overflow-hidden">
+        <div class="faq-item border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
           <button class="faq-question w-full px-6 py-4 bg-gray-50 hover:bg-gray-100 text-left font-medium text-gray-800 flex justify-between items-center transition-colors duration-200">
-            How does the AI recommendation system work?
+            <span>How does the AI recommendation system work?</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
             </svg>
           </button>
-          <div class="faq-answer px-6 py-4 bg-white hidden">
-            <p class="text-gray-600">Our AI analyzes your preferences, past bookings, and behavior patterns to suggest accommodations that match your needs. It considers factors like budget, location preferences, amenities, and reviews from similar users.</p>
+          <div class="faq-answer px-6 bg-white">
+            <p class="text-gray-600 pb-4">Our AI analyzes your preferences, past bookings, and behavior patterns to suggest accommodations that match your needs. It considers factors like budget, location preferences, amenities, and reviews from similar users to provide personalized recommendations that improve with each use.</p>
           </div>
         </div>
-        <div class="border border-gray-200 rounded-lg overflow-hidden">
+        
+        <div class="faq-item border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
           <button class="faq-question w-full px-6 py-4 bg-gray-50 hover:bg-gray-100 text-left font-medium text-gray-800 flex justify-between items-center transition-colors duration-200">
-            Can I filter by distance to specific universities?
+            <span>Can I filter by distance to specific universities?</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
             </svg>
           </button>
-          <div class="faq-answer px-6 py-4 bg-white hidden">
-            <p class="text-gray-600">Yes! Our platform includes a comprehensive database of universities worldwide. Simply select your institution and set your maximum acceptable distance, and we'll show you all suitable accommodations within that radius.</p>
+          <div class="faq-answer px-6 bg-white">
+            <p class="text-gray-600 pb-4">Yes! Our platform includes a comprehensive database of universities worldwide. Simply select your institution and set your maximum acceptable distance, and we'll show you all suitable accommodations within that radius. You can even see walking, cycling, or public transport times.</p>
           </div>
         </div>
-        <div class="border border-gray-200 rounded-lg overflow-hidden">
+        
+        <div class="faq-item border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
           <button class="faq-question w-full px-6 py-4 bg-gray-50 hover:bg-gray-100 text-left font-medium text-gray-800 flex justify-between items-center transition-colors duration-200">
-            Is the travel chatbot available 24/7?
+            <span>Is the travel chatbot available 24/7?</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
             </svg>
           </button>
-          <div class="faq-answer px-6 py-4 bg-white hidden">
-            <p class="text-gray-600">Absolutely! Our AI travel guide is always available to answer your questions, provide recommendations, and help with travel planning, no matter the time of day or night.</p>
+          <div class="faq-answer px-6 bg-white">
+            <p class="text-gray-600 pb-4">Absolutely! Our AI travel guide is always available to answer your questions, provide recommendations, and help with travel planning, no matter the time of day or night. It can assist with everything from local attractions to public transport information.</p>
           </div>
         </div>
+        
+        <div class="faq-item border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
+          <button class="faq-question w-full px-6 py-4 bg-gray-50 hover:bg-gray-100 text-left font-medium text-gray-800 flex justify-between items-center transition-colors duration-200">
+            <span>How do you ensure the quality of listed accommodations?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div class="faq-answer px-6 bg-white">
+            <p class="text-gray-600 pb-4">We have a rigorous verification process that includes property inspections, document verification, and automated quality scoring based on user reviews and ratings. Our AI also monitors listings for consistency and flags any potential issues for our team to review.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- CTA Section -->
+    <div class="bg-indigo-600 rounded-xl shadow-lg p-8 md:p-12 text-center mt-16 mb-10">
+      <h2 class="text-2xl md:text-3xl font-bold font-playfair text-white mb-4">Ready to Find Your Perfect Accommodation?</h2>
+      <p class="text-indigo-100 mb-6 max-w-2xl mx-auto">Join thousands of students and travelers who have found their ideal home away from home with WanderNest.</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="wandernest.html" class="px-6 py-3 bg-white text-indigo-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-200 shadow-sm hover:shadow-md inline-flex items-center justify-center">
+          Start Searching <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </a>
+        <a href="chatbot.html" class="px-6 py-3 border-2 border-white text-white rounded-full font-medium hover:bg-indigo-700 transition-colors duration-200 shadow-sm hover:shadow-md inline-flex items-center justify-center">
+          Ask Wander AI <i class="fas fa-robot ml-2"></i>
+        </a>
       </div>
     </div>
   </div>
 
+  <!-- Back to top button -->
+  <div class="back-to-top" id="backToTop">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
   <!-- Floating Wander AI Chatbot Icon -->
-  <a href="chatbot.html" class="chatbot-icon">
+  <div class="chatbot-icon" id="chatbotIcon">
     <i class="fas fa-robot"></i>
     <span class="chatbot-tooltip">Wander AI Assistant</span>
-  </a>
+  </div>
 
   <script>
     // Mobile menu toggle
@@ -294,12 +578,16 @@
     
     mobileMenuButton.addEventListener('click', function() {
       mobileMenu.classList.toggle('hidden');
+      this.classList.toggle('text-gray-500');
+      this.classList.toggle('text-gray-900');
     });
 
     // Close mobile menu when clicking a link
     document.querySelectorAll('#mobile-menu a').forEach(link => {
       link.addEventListener('click', function() {
         mobileMenu.classList.add('hidden');
+        mobileMenuButton.classList.remove('text-gray-900');
+        mobileMenuButton.classList.add('text-gray-500');
       });
     });
 
@@ -323,38 +611,47 @@
       easing: 'ease-in-out'
     });
 
+    ScrollReveal().reveal('.section-header', {
+      delay: 100,
+      distance: '0px',
+      opacity: 0,
+      scale: 0.98,
+      easing: 'ease-in-out'
+    });
+
     // FAQ toggle functionality
     document.querySelectorAll('.faq-question').forEach(button => {
       button.addEventListener('click', () => {
         const answer = button.nextElementSibling;
         const icon = button.querySelector('svg');
+        const faqItem = button.closest('.faq-item');
         
         // Toggle answer visibility
-        answer.classList.toggle('hidden');
+        answer.classList.toggle('active');
+        faqItem.classList.toggle('border-indigo-300');
         
         // Rotate icon
-        if (answer.classList.contains('hidden')) {
-          icon.style.transform = 'rotate(0deg)';
-        } else {
+        if (answer.classList.contains('active')) {
           icon.style.transform = 'rotate(180deg)';
+          button.classList.add('bg-indigo-50');
+          button.classList.remove('bg-gray-50');
+        } else {
+          icon.style.transform = 'rotate(0deg)';
+          button.classList.remove('bg-indigo-50');
+          button.classList.add('bg-gray-50');
         }
-        
-        // Close other open FAQs
-        document.querySelectorAll('.faq-answer').forEach(otherAnswer => {
-          if (otherAnswer !== answer && !otherAnswer.classList.contains('hidden')) {
-            otherAnswer.classList.add('hidden');
-            otherAnswer.previousElementSibling.querySelector('svg').style.transform = 'rotate(0deg)';
-          }
-        });
       });
     });
 
-    // Add ripple effect to service card buttons
-    document.querySelectorAll('.service-card a').forEach(button => {
+    // Add ripple effect to buttons
+    document.querySelectorAll('.service-card a, .faq-question, .chatbot-icon, #play-video, .back-to-top').forEach(button => {
       button.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const x = e.clientX - e.target.getBoundingClientRect().left;
-        const y = e.clientY - e.target.getBoundingClientRect().top;
+        // Only create ripple for certain buttons
+        if (this.classList.contains('service-card') || this.classList.contains('faq-question')) return;
+        
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
         
         const ripple = document.createElement('span');
         ripple.className = 'ripple';
@@ -366,6 +663,94 @@
         setTimeout(() => {
           ripple.remove();
         }, 1000);
+      });
+    });
+
+    // Animated stats counter
+    function animateValue(id, start, end, duration) {
+      const obj = document.getElementById(id);
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    // Start counters when stats section is in view
+    const statsSection = document.querySelector('.bg-white.rounded-xl.shadow-md');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateValue('stat1', 0, 12500, 2000);
+          animateValue('stat2', 0, 8500, 2000);
+          animateValue('stat3', 0, 1200, 2000);
+          animateValue('stat4', 0, 65, 2000);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    if (statsSection) {
+      observer.observe(statsSection);
+    }
+
+    // Back to top button
+    const backToTopButton = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.add('visible');
+      } else {
+        backToTopButton.classList.remove('visible');
+      }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    // Video demo functionality
+    const playButton = document.getElementById('play-video');
+    const videoPlaceholder = document.getElementById('video-placeholder');
+    const videoContainer = document.getElementById('video-container');
+    const videoIframe = videoContainer.querySelector('iframe');
+    
+    function loadVideo() {
+      videoContainer.classList.remove('hidden');
+      videoPlaceholder.classList.add('hidden');
+      videoIframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"; // Replace with your actual video URL
+    }
+    
+    playButton.addEventListener('click', loadVideo);
+    videoPlaceholder.addEventListener('click', loadVideo);
+
+    // Navbar scroll effect
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Service card click handler
+    document.querySelectorAll('.service-card').forEach(card => {
+      card.addEventListener('click', function(e) {
+        // Only navigate if click wasn't on a link inside the card
+        if (!e.target.closest('a')) {
+          const link = this.querySelector('a');
+          if (link) {
+            link.click();
+          }
+        }
       });
     });
   </script>
