@@ -1,892 +1,479 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accommodation Recommendation</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            gap: 20px;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            text-align: left;
-        }
-
-        h3 {
-            margin: 10px 0;
-            color: #333;
-            font-size: 1.1em;
-        }
-
-        .form-container {
-            flex: 1;
-            max-width: 400px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .input-section {
-            margin-bottom: 20px;
-        }
-
-        .input-section label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 5px;
-        }
-
-        .amenities-group {
-            border: 1px solid #eee;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9em;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        #map {
-            flex: 2;
-            height: 80vh;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .top-attractions {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-top: 20px;
-        }
-
-        .top-attractions ul {
-            list-style-type: disc;
-            padding-left: 20px;
-        }
-
-        @media screen and (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .form-container {
-                max-width: 100%;
-            }
-
-            #map {
-                height: 400px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="form-container">
-            <h1>Accommodation Recommendations</h1>
-            
-            <div class="input-section">
-                <label for="location">Location (City or Area):</label>
-                <input type="text" id="location" placeholder="e.g., Greater Noida">
-            </div>
-
-            <div class="input-section">
-                <label>Select Amenities:</label>
-                
-                <div class="amenities-group">
-                    <h3>Essential Services</h3>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label"><input type="checkbox" id="security"> 24/7 Security</label>
-                        <label class="checkbox-label"><input type="checkbox" id="power"> Power Backup</label>
-                        <label class="checkbox-label"><input type="checkbox" id="wifi"> Wi-Fi</label>
-                        <label class="checkbox-label"><input type="checkbox" id="laundry"> Laundry</label>
-                    </div>
-                </div>
-
-                <div class="amenities-group">
-                    <h3>Fitness & Recreation</h3>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label"><input type="checkbox" id="gym"> Gym</label>
-                        <label class="checkbox-label"><input type="checkbox" id="yoga"> Yoga Center</label>
-                        <label class="checkbox-label"><input type="checkbox" id="sports"> Sports Facilities</label>
-                    </div>
-                </div>
-
-                <div class="amenities-group">
-                    <h3>Food Options</h3>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label"><input type="checkbox" id="veg"> Vegetarian Food</label>
-                        <label class="checkbox-label"><input type="checkbox" id="nonveg"> Non-Vegetarian Food</label>
-                        <label class="checkbox-label"><input type="checkbox" id="cafe"> Cafes</label>
-                    </div>
-                </div>
-
-                <div class="amenities-group">
-                    <h3>Nearby Facilities</h3>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label"><input type="checkbox" id="medical"> Medical Store</label>
-                        <label class="checkbox-label"><input type="checkbox" id="shopping"> Shopping Market</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="input-section">
-                <label for="university">University Name (Optional):</label>
-                <input type="text" id="university" placeholder="e.g., XYZ University">
-            </div>
-
-            <div class="input-section">
-                <label for="distance">Distance from University (Optional, km):</label>
-                <input type="number" id="distance" placeholder="e.g., 5">
-            </div>
-
-            <div class="input-section">
-                <label for="budget">Budget (per month):</label>
-                <input type="number" id="budget" placeholder="e.g., 10000">
-            </div>
-
-            <button id="showClustersBtn">Show Clusters</button>
-        </div>
-
-        <div id="map"></div>
-    </div>
-
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script>
-        let map = L.map('map').setView([28.4744, 77.5030], 12);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        async function generateResponse(location, amenities, universityName, universityDistance, budget) {
-            try {
-                const response = await fetch('https://api.cohere.ai/v1/generate', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer 6quBEC7j5i0AOB9cqztZxnv1Q0yGBSwD71PEDoOT',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model: 'command-xlarge-nightly',
-                        prompt: buildPrompt(location, amenities, universityName, universityDistance, budget),
-                        max_tokens: 150,
-                        temperature: 0.7,
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                return parseCoordinates(data.generations[0].text.trim());
-            } catch (error) {
-                console.error('Error:', error);
-                alert("Sorry, an error occurred. Please try again.");
-                return [];
-            }
-        }
-
-        function buildPrompt(location, amenities, universityName, universityDistance, budget) {
-            let prompt = `Give me clusters near ${location} that include `;
-            
-            amenities.forEach(amenity => {
-                prompt += `${amenity}, `;
-            });
-
-            if (universityName) {
-                prompt += `within a ${universityDistance} km radius from ${universityName}, `;
-            }
-
-            prompt += `with a budget under ${budget} per month. Only respond with the coordinates of the clusters, in this format: 'Cluster Name: latitude, longitude'.`;
-            
-            return prompt;
-        }
-
-        function parseCoordinates(responseText) {
-            const clusters = [];
-            const lines = responseText.split('\n');
-            
-            lines.forEach(line => {
-                const match = line.match(/(.+): ([\d.-]+), ([\d.-]+)/);
-                if (match) {
-                    clusters.push({
-                        name: match[1].trim(),
-                        lat: parseFloat(match[2]),
-                        lon: parseFloat(match[3]),
-                    });
-                }
-            });
-            
-            return clusters;
-        }
-
-        function clearMap() {
-            map.eachLayer((layer) => {
-                if (layer instanceof L.Marker) {
-                    map.removeLayer(layer);
-                }
-            });
-        }
-
-        function addClustersToMap(clusters) {
-            clearMap();
-            
-            if (clusters.length === 0) {
-                alert("No clusters found for the given criteria.");
-                return;
-            }
-
-            const bounds = L.latLngBounds();
-
-            clusters.forEach(cluster => {
-                const marker = L.marker([cluster.lat, cluster.lon]).addTo(map);
-                marker.bindPopup(`<b>${cluster.name}</b><br>Lat: ${cluster.lat}<br>Lon: ${cluster.lon}`);
-                bounds.extend([cluster.lat, cluster.lon]);
-            });
-
-            map.fitBounds(bounds, { padding: [50, 50] });
-        }
-
-        async function generateTopAttractions(location) {
-            try {
-                const response = await fetch('https://api.cohere.ai/v1/generate', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer 6quBEC7j5i0AOB9cqztZxnv1Q0yGBSwD71PEDoOT',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model: 'command-xlarge-nightly',
-                        prompt: `List the top 5 tourist attractions in ${location}.`,
-                        max_tokens: 200,
-                        temperature: 0.7,
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                return data.generations[0].text.trim();
-            } catch (error) {
-                console.error('Error:', error);
-                alert("Sorry, an error occurred. Please try again.");
-                return '';
-            }
-        }
-
-        function displayTopAttractions(attractions) {
-            const attractionsContainer = document.createElement('div');
-            attractionsContainer.classList.add('top-attractions');
-
-            const attractionsTitle = document.createElement('h3');
-            attractionsTitle.textContent = 'Top Tourist Attractions';
-            attractionsContainer.appendChild(attractionsTitle);
-
-            const attractionsList = document.createElement('ul');
-            const lines = attractions.split('\n');
-            lines.forEach(line => {
-                if (line.trim() !== '') {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = line.trim();
-                    attractionsList.appendChild(listItem);
-                }
-            });
-            attractionsContainer.appendChild(attractionsList);
-
-            const formContainer = document.querySelector('.form-container');
-            formContainer.appendChild(attractionsContainer);
-        }
-
-        async function handleFormSubmit() {
-            const location = document.getElementById("location").value.trim();
-            const amenities = [];
-            
-            // Essential Services
-            if (document.getElementById("security").checked) amenities.push("24/7 security");
-            if (document.getElementById("power").checked) amenities.push("power backup");
-            if (document.getElementById("wifi").checked) amenities.push("Wi-Fi");
-            if (document.getElementById("laundry").checked) amenities.push("laundry");
-
-            // Fitness & Recreation
-            if (document.getElementById("gym").checked) amenities.push("gym");
-            if (document.getElementById("yoga").checked) amenities.push("yoga center");
-            if (document.getElementById("sports").checked) amenities.push("sports facilities");
-
-            // Food Options
-            if (document.getElementById("veg").checked) amenities.push("vegetarian food");
-            if (document.getElementById("nonveg").checked) amenities.push("non-vegetarian food");
-            if (document.getElementById("cafe").checked) amenities.push("cafe");
-
-            // Nearby Facilities
-            if (document.getElementById("medical").checked) amenities.push("medical store");
-            if (document.getElementById("shopping").checked) amenities.push("shopping market");
-
-            const universityName = document.getElementById("university").value.trim();
-            const universityDistance = document.getElementById("distance").value.trim();
-            const budget = document.getElementById("budget").value.trim();
-
-            if (!location || amenities.length === 0 || !budget) {
-                alert("Please fill in all required fields (Location, at least one amenity, and Budget).");
-                return;
-            }
-
-            const clusters = await generateResponse(location, amenities, universityName, universityDistance, budget);
-            addClustersToMap(clusters);
-
-            const topAttractions = await generateTopAttractions(location);
-            displayTopAttractions(topAttractions);
-        }
-
-        document.getElementById("showClustersBtn").addEventListener("click", handleFormSubmit);
-    </script>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Accommodation Recommendation</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accommodation Finder</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     body {
-      font-family: Arial, sans-serif;
       padding: 20px;
-      background-color: #f4f4f4;
+      background-color: #f5f7fa;
     }
     .container {
-      width: 100%;
       max-width: 1200px;
       margin: 0 auto;
       display: flex;
       gap: 20px;
       flex-wrap: wrap;
     }
-    h1 {
-      margin-bottom: 20px;
-      font-size: 1.5em;
-      text-align: left;
-    }
-    h3 {
-      margin: 10px 0;
-      color: #333;
-      font-size: 1.1em;
-    }
-    .form-container {
-      flex: 1;
-      max-width: 400px;
+    .panel {
       background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    .input-section {
-      margin-bottom: 20px;
-    }
-    .input-section label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      margin-bottom: 5px;
-    }
-    .amenities-group {
-      border: 1px solid #eee;
-      padding: 10px;
-      border-radius: 4px;
-      margin-bottom: 15px;
-    }
-    .checkbox-group {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-    }
-    .checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.9em;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1em;
-      margin-top: 10px;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    #map {
-      flex: 2;
-      height: 80vh;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      flex: 1;
       min-width: 300px;
     }
-    .top-attractions {
-      background-color: white;
-      padding: 20px;
+    #map {
+      height: 600px;
+      flex: 2;
+      min-width: 300px;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: #34495e;
+      margin: 15px 0 10px;
+      font-size: 1.2em;
+    }
+    .filter-group {
+      margin-bottom: 15px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 6px;
+    }
+    .checkbox-item {
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+    }
+    input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    label {
+      cursor: pointer;
+    }
+    input[type="text"], 
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    button.secondary {
+      background: #95a5a6;
+    }
+    button.secondary:hover {
+      background: #7f8c8d;
+    }
+    .booking-form {
+      display: none;
       margin-top: 20px;
     }
-    .top-attractions ul {
-      list-style-type: disc;
-      padding-left: 20px;
+    .property-card {
+      border: 1px solid #eee;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
     }
-    @media screen and (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-      .form-container {
-        max-width: 100%;
-      }
-      #map {
-        height: 400px;
-      }
+    .property-card:hover {
+      border-color: #3498db;
+      box-shadow: 0 2px 8px rgba(52,152,219,0.2);
+    }
+    .property-card.selected {
+      border-color: #2ecc71;
+      background: #f0fff4;
+    }
+    .property-name {
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+    .property-address {
+      color: #7f8c8d;
+      font-size: 0.9em;
+      margin-bottom: 5px;
+    }
+    .property-price {
+      color: #27ae60;
+      font-weight: bold;
+    }
+    .amenity-tag {
+      display: inline-block;
+      background: #e0f7fa;
+      color: #00838f;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      margin-right: 5px;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="form-container">
-      <h1>Accommodation Recommendations</h1>
-
-      <div class="input-section">
-        <label for="location">Location (City or Area):</label>
-        <input type="text" id="location" placeholder="e.g., Greater Noida">
+    <div class="panel">
+      <h1>Find Student Accommodation</h1>
+      
+      <div class="filter-group">
+        <h2>Location</h2>
+        <input type="text" id="location" placeholder="Enter city or area">
+        
+        <h2>Budget (per month)</h2>
+        <input type="number" id="budget" placeholder="Enter your budget">
+        
+        <h2>University (optional)</h2>
+        <input type="text" id="university" placeholder="Near which university?">
+        <input type="number" id="distance" placeholder="Max distance in km">
       </div>
-
-      <div class="input-section">
-        <label>Select Amenities:</label>
-        <div class="amenities-group">
-          <h3>Essential Services</h3>
-          <div class="checkbox-group">
-            <label class="checkbox-label"><input type="checkbox" id="security"> 24/7 Security</label>
-            <label class="checkbox-label"><input type="checkbox" id="power"> Power Backup</label>
-            <label class="checkbox-label"><input type="checkbox" id="wifi"> Wi-Fi</label>
-            <label class="checkbox-label"><input type="checkbox" id="laundry"> Laundry</label>
-          </div>
+      
+      <div class="filter-group">
+        <h2>Amenities</h2>
+        
+        <div class="checkbox-item">
+          <input type="checkbox" id="wifi">
+          <label for="wifi">Wi-Fi</label>
         </div>
-
-        <div class="amenities-group">
-          <h3>Fitness & Recreation</h3>
-          <div class="checkbox-group">
-            <label class="checkbox-label"><input type="checkbox" id="gym"> Gym</label>
-            <label class="checkbox-label"><input type="checkbox" id="yoga"> Yoga Center</label>
-            <label class="checkbox-label"><input type="checkbox" id="sports"> Sports Facilities</label>
-          </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="laundry">
+          <label for="laundry">Laundry</label>
         </div>
-
-        <div class="amenities-group">
-          <h3>Food Options</h3>
-          <div class="checkbox-group">
-            <label class="checkbox-label"><input type="checkbox" id="veg"> Vegetarian Food</label>
-            <label class="checkbox-label"><input type="checkbox" id="nonveg"> Non-Vegetarian Food</label>
-            <label class="checkbox-label"><input type="checkbox" id="cafe"> Cafes</label>
-          </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="gym">
+          <label for="gym">Gym</label>
         </div>
-
-        <div class="amenities-group">
-          <h3>Nearby Facilities</h3>
-          <div class="checkbox-group">
-            <label class="checkbox-label"><input type="checkbox" id="medical"> Medical Store</label>
-            <label class="checkbox-label"><input type="checkbox" id="shopping"> Shopping Market</label>
-          </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="security">
+          <label for="security">24/7 Security</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="parking">
+          <label for="parking">Parking</label>
         </div>
       </div>
-
-      <div class="input-section">
-        <label for="university">University Name (Optional):</label>
-        <input type="text" id="university" placeholder="e.g., XYZ University">
+      
+      <button id="searchBtn">Search Accommodations</button>
+      
+      <div id="resultsContainer" style="display: none;">
+        <h2>Available Properties</h2>
+        <div id="propertyList"></div>
       </div>
-
-      <div class="input-section">
-        <label for="distance">Distance from University (Optional, km):</label>
-        <input type="number" id="distance" placeholder="e.g., 5">
+      
+      <div id="bookingForm" class="booking-form">
+        <h2>Book This Property</h2>
+        <div id="selectedPropertyInfo"></div>
+        
+        <label for="checkin">Check-in Date</label>
+        <input type="date" id="checkin">
+        
+        <label for="checkout">Check-out Date</label>
+        <input type="date" id="checkout">
+        
+        <label for="guests">Number of Guests</label>
+        <select id="guests">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+        
+        <label for="name">Full Name</label>
+        <input type="text" id="name" placeholder="Your full name">
+        
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Your email">
+        
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" placeholder="Your phone number">
+        
+        <button id="confirmBookingBtn">Confirm Booking</button>
+        <button class="secondary" id="backToResultsBtn">Back to Results</button>
       </div>
-
-      <div class="input-section">
-        <label for="budget">Budget (per month):</label>
-        <input type="number" id="budget" placeholder="e.g., 10000">
-      </div>
-
-      <button id="showClustersBtn">Show Clusters</button>
     </div>
-
-    <div id="map"></div>
+    
+    <div id="map" class="panel"></div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
   <script>
-    // Inserted API key as requested
-    const API_KEY = '5UkJrwlKrm2BupI2ermx6GtvCO85uuUv5P8GATrj';
-
-    // Initialize the map with a default view
-    let map = L.map('map').setView([28.4744, 77.5030], 12);
+    // Initialize the map
+    const map = L.map('map').setView([28.4744, 77.5030], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // Geocode a given location using Nominatim
-    async function geocodeLocation(query) {
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      if (data && data.length > 0) {
-        return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+    // Sample property data (in a real app, this would come from an API)
+    const sampleProperties = [
+      {
+        id: 1,
+        name: "Green Valley Hostel",
+        lat: 28.4744,
+        lng: 77.5030,
+        price: 8000,
+        amenities: ["Wi-Fi", "Laundry", "24/7 Security"],
+        address: "123 University Road, Greater Noida",
+        distanceToUni: "1.2 km"
+      },
+      {
+        id: 2,
+        name: "Sunshine Apartments",
+        lat: 28.4844,
+        lng: 77.5130,
+        price: 10000,
+        amenities: ["Wi-Fi", "Gym", "Parking", "24/7 Security"],
+        address: "456 College Street, Greater Noida",
+        distanceToUni: "0.8 km"
+      },
+      {
+        id: 3,
+        name: "Cosy Nest PG",
+        lat: 28.4644,
+        lng: 77.4930,
+        price: 7000,
+        amenities: ["Wi-Fi", "Laundry"],
+        address: "789 Student Lane, Greater Noida",
+        distanceToUni: "2.1 km"
+      },
+      {
+        id: 4,
+        name: "Elite Residences",
+        lat: 28.4944,
+        lng: 77.5230,
+        price: 12000,
+        amenities: ["Wi-Fi", "Gym", "Laundry", "Parking", "24/7 Security"],
+        address: "101 Campus Avenue, Greater Noida",
+        distanceToUni: "1.5 km"
       }
-      throw new Error("Location not found");
-    }
+    ];
 
-    // Haversine formula: calculate the distance (in km) between two lat/lon coordinates
-    function getDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371; // radius of Earth in km
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat / 2) ** 2 +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon / 2) ** 2;
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    }
+    // Global variables
+    let markers = [];
+    let selectedProperty = null;
 
-    // Build a prompt that instructs the API to output JSON with only the matchedAmenities key
-    function buildPrompt(location, amenities, universityName, universityDistance, budget) {
-      let prompt = `Give me exactly 3 clusters near ${location} that include ${amenities.join(', ')}. `;
-      if (universityName) {
-        prompt += `They should be within ${universityDistance} km of ${universityName} and `;
-      }
-      prompt += `cost under ${budget} per month. `;
-      prompt += `Return the output in valid JSON format as an array of objects. Each object should have the keys "name", "lat", "lon", and "matchedAmenities". `;
-      prompt += `Here, "matchedAmenities" should be the count of amenities that match the selected options. `;
-      prompt += `Do not include any additional commentary. Example output: `;
-      prompt += `\n[{"name": "Cluster A", "lat": 28.7041, "lon": 77.1025, "matchedAmenities": 3}, {"name": "Cluster B", "lat": 28.5355, "lon": 77.3910, "matchedAmenities": 4}, {"name": "Cluster C", "lat": 28.4595, "lon": 77.0266, "matchedAmenities": 5}]`;
-      return prompt;
-    }
-
-    // Fallback: Parse the API response text using regex if JSON parsing fails
-    function parseCoordinates(responseText) {
-      const clusters = [];
-      const lines = responseText.split('\n');
-      lines.forEach(line => {
-        const trimmedLine = line.trim();
-        if (!trimmedLine) return;
-        const match = trimmedLine.match(/(.+):\s*([\d.-]+),\s*([\d.-]+),\s*MatchedAmenities:\s*(\d+)/i);
-        if (match) {
-          clusters.push({
-            name: match[1].trim(),
-            lat: parseFloat(match[2]),
-            lon: parseFloat(match[3]),
-            matchedAmenities: parseInt(match[4])
-          });
-        }
-      });
-      console.log("Parsed clusters using regex:", clusters);
-      return clusters;
-    }
-
-    // Remove previous markers from the map
-    function clearMap() {
-      map.eachLayer(layer => {
-        if (layer instanceof L.Marker) {
-          map.removeLayer(layer);
-        }
-      });
-    }
-
-    // Add cluster markers to the map and adjust bounds.
-    // Each marker shows the percentage of matched amenities based on the number of selected amenities.
-    function addClustersToMap(clusters, totalAmenitiesSelected) {
-      clearMap();
-      if (clusters.length === 0) {
-        alert("No clusters found for the given criteria. Please try a different location or adjust your parameters.");
+    // Search function
+    function searchAccommodations() {
+      const location = document.getElementById('location').value;
+      const budget = document.getElementById('budget').value;
+      const university = document.getElementById('university').value;
+      const distance = document.getElementById('distance').value;
+      
+      const amenities = [];
+      if (document.getElementById('wifi').checked) amenities.push('Wi-Fi');
+      if (document.getElementById('laundry').checked) amenities.push('Laundry');
+      if (document.getElementById('gym').checked) amenities.push('Gym');
+      if (document.getElementById('security').checked) amenities.push('24/7 Security');
+      if (document.getElementById('parking').checked) amenities.push('Parking');
+      
+      if (!location || !budget) {
+        alert('Please enter location and budget');
         return;
       }
-      const bounds = L.latLngBounds();
-      clusters.forEach(cluster => {
-        const marker = L.marker([cluster.lat, cluster.lon]).addTo(map);
-        const percentage = (cluster.matchedAmenities / totalAmenitiesSelected) * 100;
-        marker.bindPopup(
-          `<b>${cluster.name}</b><br>` +
-          `Matched Amenities: ${cluster.matchedAmenities} out of ${totalAmenitiesSelected} (${percentage.toFixed(2)}%)<br>` +
-          `Lat: ${cluster.lat}<br>Lon: ${cluster.lon}`
-        );
-        bounds.extend([cluster.lat, cluster.lon]);
-      });
-      map.fitBounds(bounds, { padding: [50, 50] });
-    }
-
-    // Generate clusters using Cohere API
-    async function generateResponse(location, amenities, universityName, universityDistance, budget) {
-      try {
-        const prompt = buildPrompt(location, amenities, universityName, universityDistance, budget);
-        console.log("Generated prompt:", prompt);
-        const response = await fetch('https://api.cohere.ai/v1/generate', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${API_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'command',
-            prompt: prompt,
-            max_tokens: 150,
-            temperature: 0.7
-          })
-        });
-
-        if (!response.ok) {
-          console.error("Response status:", response.status);
-          throw new Error('Network response was not ok');
+      
+      // In a real app, we would call an API here
+      // For demo, we'll filter our sample properties
+      let filteredProperties = sampleProperties.filter(property => {
+        // Filter by budget
+        if (property.price > budget) return false;
+        
+        // Filter by amenities
+        if (amenities.length > 0) {
+          const hasAllAmenities = amenities.every(amenity => 
+            property.amenities.includes(amenity)
+          );
+          if (!hasAllAmenities) return false;
         }
         
-        const jsonData = await response.json();
-        console.log("API response for clusters:", jsonData);
-        if (jsonData.generations && jsonData.generations.length > 0) {
-          const generatedText = jsonData.generations[0].text.trim();
-          console.log("Generated text:", generatedText);
-          try {
-            const clusters = JSON.parse(generatedText);
-            console.log("Parsed clusters from JSON:", clusters);
-            return clusters;
-          } catch (jsonError) {
-            console.warn("JSON parsing failed, falling back to regex parsing", jsonError);
-            return parseCoordinates(generatedText);
-          }
-        } else {
-          console.error("No generations returned from the API.");
-          return [];
-        }
-      } catch (error) {
-        console.error('Error in generateResponse:', error);
-        alert("Sorry, an error occurred while fetching clusters. Please try again.");
-        return [];
-      }
-    }
-
-    // Generate top attractions using Cohere API
-    async function generateTopAttractions(location) {
-      try {
-        const response = await fetch('https://api.cohere.ai/v1/generate', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${API_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'command',
-            prompt: `List the top 5 tourist attractions in ${location}.`,
-            max_tokens: 200,
-            temperature: 0.7
-          })
-        });
-
-        if (!response.ok) {
-          console.error("Response status for attractions:", response.status);
-          throw new Error('Network response was not ok');
-        }
-
-        const jsonData = await response.json();
-        console.log("API response for attractions:", jsonData);
-        if (jsonData.generations && jsonData.generations.length > 0) {
-          return jsonData.generations[0].text.trim();
-        } else {
-          console.error("No generations returned for attractions.");
-          return '';
-        }
-      } catch (error) {
-        console.error('Error in generateTopAttractions:', error);
-        alert("Sorry, an error occurred while fetching tourist attractions. Please try again.");
-        return '';
-      }
-    }
-
-    // Display the list of top attractions in the UI
-    function displayTopAttractions(attractions) {
-      const attractionsContainer = document.createElement('div');
-      attractionsContainer.classList.add('top-attractions');
-      const attractionsTitle = document.createElement('h3');
-      attractionsTitle.textContent = 'Top Tourist Attractions';
-      attractionsContainer.appendChild(attractionsTitle);
-      const attractionsList = document.createElement('ul');
-      const lines = attractions.split('\n');
-      lines.forEach(line => {
-        const trimmedLine = line.trim();
-        if (trimmedLine) {
-          const listItem = document.createElement('li');
-          listItem.textContent = trimmedLine;
-          attractionsList.appendChild(listItem);
-        }
+        return true;
       });
-      attractionsContainer.appendChild(attractionsList);
-      const formContainer = document.querySelector('.form-container');
-      formContainer.appendChild(attractionsContainer);
+      
+      if (filteredProperties.length === 0) {
+        alert('No properties found matching your criteria');
+        return;
+      }
+      
+      displayProperties(filteredProperties);
+      showOnMap(filteredProperties);
+      
+      // Show results container
+      document.getElementById('resultsContainer').style.display = 'block';
     }
-
-    // Handle form submission: validate inputs, call APIs, filter clusters, and update the UI
-    async function handleFormSubmit() {
-      // Remove previous top attractions if present
-      const oldAttractions = document.querySelector('.top-attractions');
-      if (oldAttractions) {
-        oldAttractions.remove();
-      }
-
-      const location = document.getElementById('location').value.trim();
-      const amenities = [];
-      if (document.getElementById('security').checked) amenities.push("24/7 security");
-      if (document.getElementById('power').checked) amenities.push("power backup");
-      if (document.getElementById('wifi').checked) amenities.push("Wi-Fi");
-      if (document.getElementById('laundry').checked) amenities.push("laundry");
-      if (document.getElementById('gym').checked) amenities.push("gym");
-      if (document.getElementById('yoga').checked) amenities.push("yoga center");
-      if (document.getElementById('sports').checked) amenities.push("sports facilities");
-      if (document.getElementById('veg').checked) amenities.push("vegetarian food");
-      if (document.getElementById('nonveg').checked) amenities.push("non-vegetarian food");
-      if (document.getElementById('cafe').checked) amenities.push("cafe");
-      if (document.getElementById('medical').checked) amenities.push("medical store");
-      if (document.getElementById('shopping').checked) amenities.push("shopping market");
-
-      const universityName = document.getElementById('university').value.trim();
-      const universityDistance = document.getElementById('distance').value.trim();
-      const budget = document.getElementById('budget').value.trim();
-
-      if (!location || amenities.length === 0 || !budget) {
-        alert("Please fill in all required fields (Location, at least one amenity, and Budget).");
-        return;
-      }
-
-      // Geocode the main location and recenter the map.
-      let mainCoords;
-      try {
-        mainCoords = await geocodeLocation(location);
-        map.setView([mainCoords.lat, mainCoords.lon], 13);
-      } catch (error) {
-        alert("Unable to find the location. Please check your input and try again.");
-        return;
-      }
-
-      // Get clusters from the API.
-      let clusters = await generateResponse(location, amenities, universityName, universityDistance, budget);
-
-      // Filter clusters based on distance from the main location (e.g., within 20 km).
-      clusters = clusters.filter(cluster => {
-        const dist = getDistance(cluster.lat, cluster.lon, mainCoords.lat, mainCoords.lon);
-        return dist <= 20;
+    
+    // Display properties in the list
+    function displayProperties(properties) {
+      const propertyList = document.getElementById('propertyList');
+      propertyList.innerHTML = '';
+      
+      properties.forEach(property => {
+        const propertyCard = document.createElement('div');
+        propertyCard.className = 'property-card';
+        propertyCard.dataset.id = property.id;
+        
+        propertyCard.innerHTML = `
+          <div class="property-name">${property.name}</div>
+          <div class="property-address">${property.address}</div>
+          <div class="property-price">₹${property.price}/month</div>
+          <div>
+            ${property.amenities.map(a => `<span class="amenity-tag">${a}</span>`).join('')}
+          </div>
+          ${property.distanceToUni ? `<div>Distance to uni: ${property.distanceToUni}</div>` : ''}
+        `;
+        
+        propertyCard.addEventListener('click', () => selectProperty(property));
+        propertyList.appendChild(propertyCard);
       });
-      if (clusters.length === 0) {
-        alert("No clusters found within 20 km of the selected location.");
-        return;
-      }
-
-      // If a university and distance are specified, filter clusters based on distance from the university.
-      if (universityName && universityDistance) {
-        try {
-          const uniCoords = await geocodeLocation(universityName);
-          clusters = clusters.filter(cluster => {
-            const dist = getDistance(cluster.lat, cluster.lon, uniCoords.lat, uniCoords.lon);
-            return dist <= parseFloat(universityDistance);
+    }
+    
+    // Show properties on map
+    function showOnMap(properties) {
+      // Clear previous markers
+      markers.forEach(marker => map.removeLayer(marker));
+      markers = [];
+      
+      // Add new markers
+      properties.forEach(property => {
+        const marker = L.marker([property.lat, property.lng])
+          .addTo(map)
+          .bindPopup(`<b>${property.name}</b><br>₹${property.price}/month`);
+        
+        marker.on('click', () => {
+          // Highlight the corresponding card
+          document.querySelectorAll('.property-card').forEach(card => {
+            card.classList.remove('selected');
+            if (parseInt(card.dataset.id) === property.id) {
+              card.classList.add('selected');
+              card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
           });
-          if (clusters.length === 0) {
-            alert("No clusters found within the specified distance from the university.");
-            return;
-          }
-        } catch (error) {
-          alert("Unable to geocode the university location. Please check your university name and try again.");
-          return;
-        }
+        });
+        
+        markers.push(marker);
+      });
+      
+      // Fit map to show all markers
+      if (properties.length > 0) {
+        const group = new L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.2));
       }
-
-      addClustersToMap(clusters, amenities.length);
-      const topAttractions = await generateTopAttractions(location);
-      displayTopAttractions(topAttractions);
     }
-
-    document.getElementById('showClustersBtn').addEventListener('click', handleFormSubmit);
+    
+    // Select a property for booking
+    function selectProperty(property) {
+      selectedProperty = property;
+      
+      // Highlight selected card
+      document.querySelectorAll('.property-card').forEach(card => {
+        card.classList.remove('selected');
+        if (parseInt(card.dataset.id) === property.id) {
+          card.classList.add('selected');
+        }
+      });
+      
+      // Show booking form
+      document.getElementById('resultsContainer').style.display = 'none';
+      document.getElementById('bookingForm').style.display = 'block';
+      
+      // Set property info
+      document.getElementById('selectedPropertyInfo').innerHTML = `
+        <div class="property-name">${property.name}</div>
+        <div class="property-address">${property.address}</div>
+        <div class="property-price">₹${property.price}/month</div>
+      `;
+      
+      // Set today's date as min for checkin
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('checkin').min = today;
+    }
+    
+    // Confirm booking
+    function confirmBooking() {
+      const checkin = document.getElementById('checkin').value;
+      const checkout = document.getElementById('checkout').value;
+      const guests = document.getElementById('guests').value;
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      
+      if (!checkin || !checkout || !name || !email || !phone) {
+        alert('Please fill all required fields');
+        return;
+      }
+      
+      if (new Date(checkout) <= new Date(checkin)) {
+        alert('Check-out date must be after check-in date');
+        return;
+      }
+      
+      // In a real app, we would send this to a server
+      const bookingDetails = {
+        property: selectedProperty,
+        checkin,
+        checkout,
+        guests,
+        customer: { name, email, phone }
+      };
+      
+      console.log('Booking confirmed:', bookingDetails);
+      
+      alert(`Booking confirmed for ${selectedProperty.name}!\nWe've sent details to ${email}`);
+      
+      // Reset the form
+      resetForm();
+    }
+    
+    // Back to results from booking form
+    function backToResults() {
+      document.getElementById('bookingForm').style.display = 'none';
+      document.getElementById('resultsContainer').style.display = 'block';
+    }
+    
+    // Reset the form
+    function resetForm() {
+      document.getElementById('bookingForm').style.display = 'none';
+      document.getElementById('resultsContainer').style.display = 'none';
+      document.getElementById('searchBtn').click();
+    }
+    
+    // Event listeners
+    document.getElementById('searchBtn').addEventListener('click', searchAccommodations);
+    document.getElementById('confirmBookingBtn').addEventListener('click', confirmBooking);
+    document.getElementById('backToResultsBtn').addEventListener('click', backToResults);
+    
+    // Set today's date as default for checkin
+    document.getElementById('checkin').value = new Date().toISOString().split('T')[0];
+    
+    // Set tomorrow's date as default for checkout
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('checkout').value = tomorrow.toISOString().split('T')[0];
   </script>
 </body>
 </html>
