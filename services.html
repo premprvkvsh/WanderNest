@@ -717,29 +717,29 @@
     });
 
     // Video demo functionality
-    const playButton = document.getElementById('play-video');
-    const videoPlaceholder = document.getElementById('video-placeholder');
-    const videoContainer = document.getElementById('video-container');
-    const videoIframe = videoContainer.querySelector('iframe');
+    // const playButton = document.getElementById('play-video');
+    // const videoPlaceholder = document.getElementById('video-placeholder');
+    // const videoContainer = document.getElementById('video-container');
+    // const videoIframe = videoContainer.querySelector('iframe');
     
-    function loadVideo() {
-      videoContainer.classList.remove('hidden');
-      videoPlaceholder.classList.add('hidden');
-      videoIframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"; // Replace with your actual video URL
-    }
+    // function loadVideo() {
+    //   videoContainer.classList.remove('hidden');
+    //   videoPlaceholder.classList.add('hidden');
+    //   videoIframe.src = "https://www.youtube.com/watch?v=NJJLq8XMKH8"; // Replace with your actual video URL
+    // }
     
-    playButton.addEventListener('click', loadVideo);
-    videoPlaceholder.addEventListener('click', loadVideo);
+    // playButton.addEventListener('click', loadVideo);
+    // videoPlaceholder.addEventListener('click', loadVideo);
 
-    // Navbar scroll effect
-    const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 10) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
-    });
+    // // Navbar scroll effect
+    // const navbar = document.querySelector('.navbar');
+    // window.addEventListener('scroll', () => {
+    //   if (window.scrollY > 10) {
+    //     navbar.classList.add('scrolled');
+    //   } else {
+    //     navbar.classList.remove('scrolled');
+    //   }
+    // });
 
     // Service card click handler
     document.querySelectorAll('.service-card').forEach(card => {
