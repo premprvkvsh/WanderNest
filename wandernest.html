@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Accommodation Finder</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -15,208 +16,544 @@
     body {
       padding: 20px;
       background-color: #f5f7fa;
+      color: #333;
     }
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       display: flex;
-      gap: 20px;
+      gap: 25px;
       flex-wrap: wrap;
     }
     .panel {
       background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      padding: 25px;
       flex: 1;
-      min-width: 300px;
+      min-width: 350px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .panel:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
     }
     #map {
-      height: 600px;
+      height: 700px;
       flex: 2;
-      min-width: 300px;
-      border-radius: 8px;
+      min-width: 350px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
     h1 {
       color: #2c3e50;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      font-size: 2.2rem;
+      text-align: center;
+      position: relative;
+    }
+    h1:after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: #3498db;
+      margin: 10px auto 0;
+      border-radius: 2px;
     }
     h2 {
       color: #34495e;
-      margin: 15px 0 10px;
-      font-size: 1.2em;
+      margin: 20px 0 15px;
+      font-size: 1.3em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2 i {
+      color: #3498db;
     }
     .filter-group {
-      margin-bottom: 15px;
-      padding: 15px;
+      margin-bottom: 20px;
+      padding: 18px;
       background: #f8f9fa;
-      border-radius: 6px;
+      border-radius: 8px;
+      border-left: 4px solid #3498db;
     }
     .checkbox-item {
-      margin: 8px 0;
+      margin: 10px 0;
       display: flex;
       align-items: center;
     }
     input[type="checkbox"] {
-      margin-right: 8px;
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+      accent-color: #3498db;
     }
     label {
       cursor: pointer;
+      font-size: 0.95rem;
     }
     input[type="text"], 
     input[type="number"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
     select {
       width: 100%;
-      padding: 10px;
-      margin: 5px 0 15px;
+      padding: 12px;
+      margin: 8px 0 18px;
       border: 1px solid #ddd;
-      border-radius: 4px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      transition: border 0.3s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
     }
     button {
-      background: #3498db;
+      background: linear-gradient(135deg, #3498db, #2980b9);
       color: white;
       border: none;
-      padding: 12px;
-      border-radius: 4px;
+      padding: 14px;
+      border-radius: 6px;
       cursor: pointer;
       width: 100%;
-      font-size: 16px;
-      margin-top: 10px;
-      transition: background 0.3s;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 15px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
     button:hover {
-      background: #2980b9;
+      background: linear-gradient(135deg, #2980b9, #3498db);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(41, 128, 185, 0.3);
+    }
+    button:active {
+      transform: translateY(0);
     }
     button.secondary {
-      background: #95a5a6;
+      background: linear-gradient(135deg, #95a5a6, #7f8c8d);
     }
     button.secondary:hover {
-      background: #7f8c8d;
+      background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+      box-shadow: 0 4px 12px rgba(127, 140, 141, 0.3);
     }
     .booking-form {
       display: none;
-      margin-top: 20px;
+      margin-top: 25px;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .property-card {
       border: 1px solid #eee;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 6px;
+      padding: 18px;
+      margin: 12px 0;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
     }
     .property-card:hover {
       border-color: #3498db;
-      box-shadow: 0 2px 8px rgba(52,152,219,0.2);
+      box-shadow: 0 4px 15px rgba(52,152,219,0.15);
+      transform: translateY(-3px);
     }
     .property-card.selected {
       border-color: #2ecc71;
-      background: #f0fff4;
+      background: #f8fff9;
+    }
+    .property-card.selected:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: #2ecc71;
     }
     .property-name {
       font-weight: bold;
       color: #2c3e50;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
     }
     .property-address {
       color: #7f8c8d;
       font-size: 0.9em;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
     .property-price {
       color: #27ae60;
       font-weight: bold;
+      font-size: 1.1rem;
+      margin: 10px 0;
     }
     .amenity-tag {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       background: #e0f7fa;
       color: #00838f;
-      padding: 2px 8px;
-      border-radius: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
       font-size: 0.8em;
+      margin-right: 8px;
+      margin-top: 8px;
+      gap: 5px;
+    }
+    .property-rating {
+      display: flex;
+      align-items: center;
+      margin: 8px 0;
+      color: #f39c12;
+      font-weight: bold;
+    }
+    .property-rating i {
       margin-right: 5px;
-      margin-top: 5px;
+    }
+    .property-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin: 12px 0;
+      font-size: 0.9em;
+    }
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #7f8c8d;
+    }
+    .feature i {
+      color: #3498db;
+    }
+    .no-results {
+      text-align: center;
+      padding: 30px;
+      color: #7f8c8d;
+    }
+    .no-results i {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: #bdc3c7;
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    .loading i {
+      font-size: 2rem;
+      color: #3498db;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .property-image {
+      width: 100%;
+      height: 150px;
+      background-color: #eee;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .property-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .property-type {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.8em;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #2c3e50;
+    }
+    .confirmation-message {
+      display: none;
+      text-align: center;
+      padding: 30px;
+      color: #27ae60;
+    }
+    .confirmation-message i {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #2ecc71;
+    }
+    .confirmation-message h2 {
+      color: #27ae60;
+      justify-content: center;
+    }
+    .price-calculator {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    .price-breakdown {
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+    }
+    .price-total {
+      font-weight: bold;
+      border-top: 1px solid #ddd;
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+    .tab-container {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+    .tab.active {
+      border-bottom: 3px solid #3498db;
+      color: #3498db;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .property-details {
+      margin-top: 20px;
+    }
+    .detail-item {
+      display: flex;
+      margin-bottom: 12px;
+    }
+    .detail-label {
+      font-weight: 500;
+      min-width: 120px;
+      color: #7f8c8d;
+    }
+    .detail-value {
+      flex: 1;
+    }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .panel, #map {
+        min-width: 100%;
+      }
+      #map {
+        height: 400px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="panel">
-      <h1>Find Student Accommodation</h1>
+      <h1><i class="fas fa-home"></i>Student Accommodation</h1>
       
-      <div class="filter-group">
-        <h2>Location</h2>
-        <input type="text" id="location" placeholder="Enter city or area">
-        
-        <h2>Budget (per month)</h2>
-        <input type="number" id="budget" placeholder="Enter your budget">
-        
-        <h2>University (optional)</h2>
-        <input type="text" id="university" placeholder="Near which university?">
-        <input type="number" id="distance" placeholder="Max distance in km">
+      <div class="tab-container">
+        <div class="tab active" data-tab="search">Search</div>
+        <div class="tab" data-tab="favorites">Favorites</div>
       </div>
       
-      <div class="filter-group">
-        <h2>Amenities</h2>
+      <div class="tab-content active" id="search-tab">
+        <div class="filter-group">
+          <h2><i class="fas fa-map-marker-alt"></i> Location</h2>
+          <input type="text" id="location" placeholder="Enter city or area">
+          
+          <h2><i class="fas fa-wallet"></i> Budget (per month)</h2>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="range" id="budget-range" min="3000" max="20000" step="1000" value="10000" style="flex: 1;">
+            <input type="number" id="budget" placeholder="Your budget" value="10000" style="width: 100px;">
+          </div>
+          
+          <h2><i class="fas fa-university"></i> University (optional)</h2>
+          <input type="text" id="university" placeholder="Near which university?">
+          <input type="number" id="distance" placeholder="Max distance in km">
+        </div>
         
-        <div class="checkbox-item">
-          <input type="checkbox" id="wifi">
-          <label for="wifi">Wi-Fi</label>
+        <div class="filter-group">
+          <h2><i class="fas fa-star"></i> Filters</h2>
+          
+          <div style="margin-bottom: 15px;">
+            <label for="room-type">Room Type</label>
+            <select id="room-type">
+              <option value="">Any</option>
+              <option value="private">Private Room</option>
+              <option value="shared">Shared Room</option>
+              <option value="studio">Studio Apartment</option>
+              <option value="apartment">Entire Apartment</option>
+            </select>
+          </div>
+          
+          <h3>Amenities</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="checkbox-item">
+              <input type="checkbox" id="wifi">
+              <label for="wifi"><i class="fas fa-wifi"></i> Wi-Fi</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="laundry">
+              <label for="laundry"><i class="fas fa-tshirt"></i> Laundry</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="gym">
+              <label for="gym"><i class="fas fa-dumbbell"></i> Gym</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="security">
+              <label for="security"><i class="fas fa-shield-alt"></i> 24/7 Security</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="parking">
+              <label for="parking"><i class="fas fa-car"></i> Parking</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="kitchen">
+              <label for="kitchen"><i class="fas fa-utensils"></i> Kitchen</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="ac">
+              <label for="ac"><i class="fas fa-snowflake"></i> A/C</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="furnished">
+              <label for="furnished"><i class="fas fa-couch"></i> Furnished</label>
+            </div>
+          </div>
         </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="laundry">
-          <label for="laundry">Laundry</label>
+        
+        <button id="searchBtn"><i class="fas fa-search"></i> Search Accommodations</button>
+        
+        <div class="loading" id="loadingIndicator">
+          <i class="fas fa-spinner"></i>
+          <p>Searching for accommodations...</p>
         </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="gym">
-          <label for="gym">Gym</label>
+        
+        <div id="resultsContainer" style="display: none;">
+          <h2><i class="fas fa-list"></i> Available Properties</h2>
+          <div id="propertyList"></div>
         </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="security">
-          <label for="security">24/7 Security</label>
-        </div>
-        <div class="checkbox-item">
-          <input type="checkbox" id="parking">
-          <label for="parking">Parking</label>
+        
+        <div class="no-results" id="noResults" style="display: none;">
+          <i class="fas fa-home"></i>
+          <h3>No properties found</h3>
+          <p>Try adjusting your search filters</p>
         </div>
       </div>
       
-      <button id="searchBtn">Search Accommodations</button>
-      
-      <div id="resultsContainer" style="display: none;">
-        <h2>Available Properties</h2>
-        <div id="propertyList"></div>
+      <div class="tab-content" id="favorites-tab">
+        <h2><i class="fas fa-heart"></i> Your Favorites</h2>
+        <div id="favoritesList">
+          <div class="no-results">
+            <i class="fas fa-heart-broken"></i>
+            <h3>No favorites yet</h3>
+            <p>Save properties by clicking the heart icon</p>
+          </div>
+        </div>
       </div>
       
       <div id="bookingForm" class="booking-form">
-        <h2>Book This Property</h2>
+        <h2><i class="fas fa-calendar-check"></i> Book This Property</h2>
         <div id="selectedPropertyInfo"></div>
         
-        <label for="checkin">Check-in Date</label>
-        <input type="date" id="checkin">
+        <div class="tab-container">
+          <div class="tab active" data-tab="booking">Booking</div>
+          <div class="tab" data-tab="details">Details</div>
+        </div>
         
-        <label for="checkout">Check-out Date</label>
-        <input type="date" id="checkout">
+        <div class="tab-content active" id="booking-tab">
+          <div class="form-group">
+            <label for="checkin"><i class="far fa-calendar-alt"></i> Check-in Date</label>
+            <input type="date" id="checkin">
+          </div>
+          
+          <div class="form-group">
+            <label for="checkout"><i class="far fa-calendar-alt"></i> Check-out Date</label>
+            <input type="date" id="checkout">
+          </div>
+          
+          <div class="form-group">
+            <label for="guests"><i class="fas fa-user-friends"></i> Number of Guests</label>
+            <select id="guests">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+          
+          <div class="price-calculator">
+            <h3><i class="fas fa-calculator"></i> Price Calculation</h3>
+            <div class="price-breakdown" id="priceBreakdown"></div>
+          </div>
+          
+          <h3><i class="fas fa-user"></i> Personal Information</h3>
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Your full name">
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Your email">
+          </div>
+          
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" placeholder="Your phone number">
+          </div>
+          
+          <button id="confirmBookingBtn"><i class="fas fa-check"></i> Confirm Booking</button>
+          <button class="secondary" id="backToResultsBtn"><i class="fas fa-arrow-left"></i> Back to Results</button>
+        </div>
         
-        <label for="guests">Number of Guests</label>
-        <select id="guests">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select>
-        
-        <label for="name">Full Name</label>
-        <input type="text" id="name" placeholder="Your full name">
-        
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="Your email">
-        
-        <label for="phone">Phone</label>
-        <input type="tel" id="phone" placeholder="Your phone number">
-        
-        <button id="confirmBookingBtn">Confirm Booking</button>
-        <button class="secondary" id="backToResultsBtn">Back to Results</button>
+        <div class="tab-content" id="details-tab">
+          <div class="property-details" id="propertyDetails"></div>
+        </div>
+      </div>
+      
+      <div class="confirmation-message" id="confirmationMessage">
+        <i class="fas fa-check-circle"></i>
+        <h2>Booking Confirmed!</h2>
+        <p id="confirmationDetails"></p>
+        <button id="newSearchBtn" style="margin-top: 20px;"><i class="fas fa-search"></i> New Search</button>
       </div>
     </div>
     
@@ -224,6 +561,7 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
   <script>
     // Initialize the map
     const map = L.map('map').setView([28.4744, 77.5030], 12);
@@ -239,9 +577,20 @@
         lat: 28.4744,
         lng: 77.5030,
         price: 8000,
-        amenities: ["Wi-Fi", "Laundry", "24/7 Security"],
+        type: "shared",
+        amenities: ["Wi-Fi", "Laundry", "24/7 Security", "Kitchen"],
         address: "123 University Road, Greater Noida",
-        distanceToUni: "1.2 km"
+        distanceToUni: "1.2 km",
+        rating: 4.2,
+        reviews: 28,
+        images: ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
+        description: "A comfortable hostel with great amenities and friendly atmosphere. Perfect for students looking for affordable accommodation.",
+        features: {
+          beds: "2 Beds",
+          bath: "Shared Bathroom",
+          area: "120 sq ft",
+          available: "Immediate"
+        }
       },
       {
         id: 2,
@@ -249,9 +598,20 @@
         lat: 28.4844,
         lng: 77.5130,
         price: 10000,
-        amenities: ["Wi-Fi", "Gym", "Parking", "24/7 Security"],
+        type: "private",
+        amenities: ["Wi-Fi", "Gym", "Parking", "24/7 Security", "A/C", "Furnished"],
         address: "456 College Street, Greater Noida",
-        distanceToUni: "0.8 km"
+        distanceToUni: "0.8 km",
+        rating: 4.7,
+        reviews: 42,
+        images: ["https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
+        description: "Modern apartments with all the amenities you need. Private rooms with attached bathrooms and study areas.",
+        features: {
+          beds: "1 Bed",
+          bath: "Private Bathroom",
+          area: "200 sq ft",
+          available: "From next month"
+        }
       },
       {
         id: 3,
@@ -259,9 +619,20 @@
         lat: 28.4644,
         lng: 77.4930,
         price: 7000,
-        amenities: ["Wi-Fi", "Laundry"],
+        type: "shared",
+        amenities: ["Wi-Fi", "Laundry", "Kitchen"],
         address: "789 Student Lane, Greater Noida",
-        distanceToUni: "2.1 km"
+        distanceToUni: "2.1 km",
+        rating: 3.9,
+        reviews: 15,
+        images: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
+        description: "Affordable paying guest accommodation with basic amenities. Good for budget-conscious students.",
+        features: {
+          beds: "3 Beds",
+          bath: "Shared Bathroom",
+          area: "150 sq ft",
+          available: "Immediate"
+        }
       },
       {
         id: 4,
@@ -269,22 +640,118 @@
         lat: 28.4944,
         lng: 77.5230,
         price: 12000,
-        amenities: ["Wi-Fi", "Gym", "Laundry", "Parking", "24/7 Security"],
+        type: "studio",
+        amenities: ["Wi-Fi", "Gym", "Laundry", "Parking", "24/7 Security", "A/C", "Furnished", "Kitchen"],
         address: "101 Campus Avenue, Greater Noida",
-        distanceToUni: "1.5 km"
+        distanceToUni: "1.5 km",
+        rating: 4.5,
+        reviews: 36,
+        images: ["https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
+        description: "Premium studio apartments with all modern conveniences. Perfect for students who want comfort and privacy.",
+        features: {
+          beds: "1 Bed",
+          bath: "Private Bathroom",
+          area: "300 sq ft",
+          available: "Immediate"
+        }
+      },
+      {
+        id: 5,
+        name: "University Heights",
+        lat: 28.4794,
+        lng: 77.4980,
+        price: 9000,
+        type: "private",
+        amenities: ["Wi-Fi", "Laundry", "24/7 Security", "Kitchen", "Furnished"],
+        address: "202 Academic Road, Greater Noida",
+        distanceToUni: "0.5 km",
+        rating: 4.3,
+        reviews: 31,
+        images: ["https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
+        description: "Conveniently located just minutes from campus. Private rooms with study desks and ample storage.",
+        features: {
+          beds: "1 Bed",
+          bath: "Shared Bathroom",
+          area: "180 sq ft",
+          available: "From next week"
+        }
       }
     ];
 
     // Global variables
     let markers = [];
     let selectedProperty = null;
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
+    // Initialize the app
+    function init() {
+      // Set up event listeners
+      document.getElementById('searchBtn').addEventListener('click', searchAccommodations);
+      document.getElementById('confirmBookingBtn').addEventListener('click', confirmBooking);
+      document.getElementById('backToResultsBtn').addEventListener('click', backToResults);
+      document.getElementById('newSearchBtn').addEventListener('click', resetForm);
+      
+      // Budget range sync
+      const budgetRange = document.getElementById('budget-range');
+      const budgetInput = document.getElementById('budget');
+      
+      budgetRange.addEventListener('input', () => {
+        budgetInput.value = budgetRange.value;
+      });
+      
+      budgetInput.addEventListener('input', () => {
+        if (budgetInput.value > 20000) budgetInput.value = 20000;
+        if (budgetInput.value < 3000) budgetInput.value = 3000;
+        budgetRange.value = budgetInput.value;
+      });
+      
+      // Tab switching
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const tabName = tab.dataset.tab;
+          
+          // Update active tab
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          // Show corresponding content
+          document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+          });
+          document.getElementById(`${tabName}-tab`).classList.add('active');
+          
+          // If favorites tab is selected, load favorites
+          if (tabName === 'favorites') {
+            displayFavorites();
+          }
+        });
+      });
+      
+      // Set today's date as default for checkin
+      document.getElementById('checkin').value = new Date().toISOString().split('T')[0];
+      
+      // Set tomorrow's date as default for checkout
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      document.getElementById('checkout').value = tomorrow.toISOString().split('T')[0];
+      
+      // Update price calculation when dates change
+      document.getElementById('checkin').addEventListener('change', updatePriceCalculation);
+      document.getElementById('checkout').addEventListener('change', updatePriceCalculation);
+      
+      // Load favorites if any
+      if (favorites.length > 0) {
+        displayFavorites();
+      }
+    }
+    
     // Search function
     function searchAccommodations() {
       const location = document.getElementById('location').value;
       const budget = document.getElementById('budget').value;
       const university = document.getElementById('university').value;
       const distance = document.getElementById('distance').value;
+      const roomType = document.getElementById('room-type').value;
       
       const amenities = [];
       if (document.getElementById('wifi').checked) amenities.push('Wi-Fi');
@@ -292,39 +759,61 @@
       if (document.getElementById('gym').checked) amenities.push('Gym');
       if (document.getElementById('security').checked) amenities.push('24/7 Security');
       if (document.getElementById('parking').checked) amenities.push('Parking');
+      if (document.getElementById('kitchen').checked) amenities.push('Kitchen');
+      if (document.getElementById('ac').checked) amenities.push('A/C');
+      if (document.getElementById('furnished').checked) amenities.push('Furnished');
       
       if (!location || !budget) {
         alert('Please enter location and budget');
         return;
       }
       
-      // In a real app, we would call an API here
-      // For demo, we'll filter our sample properties
-      let filteredProperties = sampleProperties.filter(property => {
-        // Filter by budget
-        if (property.price > budget) return false;
+      // Show loading indicator
+      document.getElementById('loadingIndicator').style.display = 'block';
+      document.getElementById('resultsContainer').style.display = 'none';
+      document.getElementById('noResults').style.display = 'none';
+      
+      // Simulate API call delay
+      setTimeout(() => {
+        // In a real app, we would call an API here
+        // For demo, we'll filter our sample properties
+        let filteredProperties = sampleProperties.filter(property => {
+          // Filter by budget
+          if (property.price > budget) return false;
+          
+          // Filter by room type
+          if (roomType && property.type !== roomType) return false;
+          
+          // Filter by amenities
+          if (amenities.length > 0) {
+            const hasAllAmenities = amenities.every(amenity => 
+              property.amenities.includes(amenity)
+            );
+            if (!hasAllAmenities) return false;
+          }
+          
+          return true;
+        });
         
-        // Filter by amenities
-        if (amenities.length > 0) {
-          const hasAllAmenities = amenities.every(amenity => 
-            property.amenities.includes(amenity)
-          );
-          if (!hasAllAmenities) return false;
+        // Hide loading indicator
+        document.getElementById('loadingIndicator').style.display = 'none';
+        
+        if (filteredProperties.length === 0) {
+          document.getElementById('noResults').style.display = 'block';
+          document.getElementById('resultsContainer').style.display = 'none';
+          // Clear previous markers
+          markers.forEach(marker => map.removeLayer(marker));
+          markers = [];
+          return;
         }
         
-        return true;
-      });
-      
-      if (filteredProperties.length === 0) {
-        alert('No properties found matching your criteria');
-        return;
-      }
-      
-      displayProperties(filteredProperties);
-      showOnMap(filteredProperties);
-      
-      // Show results container
-      document.getElementById('resultsContainer').style.display = 'block';
+        displayProperties(filteredProperties);
+        showOnMap(filteredProperties);
+        
+        // Show results container
+        document.getElementById('resultsContainer').style.display = 'block';
+        document.getElementById('noResults').style.display = 'none';
+      }, 1000);
     }
     
     // Display properties in the list
@@ -337,19 +826,194 @@
         propertyCard.className = 'property-card';
         propertyCard.dataset.id = property.id;
         
+        // Check if property is in favorites
+        const isFavorite = favorites.includes(property.id);
+        
         propertyCard.innerHTML = `
+          <div class="property-image">
+            <img src="${property.images[0]}" alt="${property.name}">
+            <span class="property-type">${getTypeName(property.type)}</span>
+            <button class="favorite-btn" data-id="${property.id}" style="
+              position: absolute;
+              top: 10px;
+              left: 10px;
+              background: rgba(255,255,255,0.8);
+              border: none;
+              border-radius: 50%;
+              width: 30px;
+              height: 30px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              cursor: pointer;
+              color: ${isFavorite ? '#e74c3c' : '#95a5a6'};
+              font-size: 16px;
+            ">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
           <div class="property-name">${property.name}</div>
-          <div class="property-address">${property.address}</div>
+          <div class="property-address"><i class="fas fa-map-marker-alt"></i> ${property.address}</div>
+          <div class="property-rating">
+            <i class="fas fa-star"></i> ${property.rating} (${property.reviews} reviews)
+          </div>
+          <div class="property-features">
+            <div class="feature"><i class="fas fa-bed"></i> ${property.features.beds}</div>
+            <div class="feature"><i class="fas fa-bath"></i> ${property.features.bath}</div>
+            <div class="feature"><i class="fas fa-ruler-combined"></i> ${property.features.area}</div>
+          </div>
           <div class="property-price">₹${property.price}/month</div>
           <div>
-            ${property.amenities.map(a => `<span class="amenity-tag">${a}</span>`).join('')}
+            ${property.amenities.map(a => `
+              <span class="amenity-tag">
+                <i class="${getAmenityIcon(a)}"></i> ${a}
+              </span>
+            `).join('')}
           </div>
-          ${property.distanceToUni ? `<div>Distance to uni: ${property.distanceToUni}</div>` : ''}
+          ${property.distanceToUni ? `<div style="margin-top: 10px;"><i class="fas fa-university"></i> ${property.distanceToUni} to university</div>` : ''}
         `;
         
         propertyCard.addEventListener('click', () => selectProperty(property));
         propertyList.appendChild(propertyCard);
       });
+      
+      // Add event listeners to favorite buttons
+      document.querySelectorAll('.favorite-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const propertyId = parseInt(btn.dataset.id);
+          toggleFavorite(propertyId, btn);
+        });
+      });
+    }
+    
+    // Get amenity icon
+    function getAmenityIcon(amenity) {
+      const icons = {
+        'Wi-Fi': 'fa-wifi',
+        'Laundry': 'fa-tshirt',
+        'Gym': 'fa-dumbbell',
+        '24/7 Security': 'fa-shield-alt',
+        'Parking': 'fa-car',
+        'Kitchen': 'fa-utensils',
+        'A/C': 'fa-snowflake',
+        'Furnished': 'fa-couch'
+      };
+      return `fas ${icons[amenity] || 'fa-check'}`;
+    }
+    
+    // Get type name
+    function getTypeName(type) {
+      const names = {
+        'private': 'Private Room',
+        'shared': 'Shared Room',
+        'studio': 'Studio',
+        'apartment': 'Apartment'
+      };
+      return names[type] || type;
+    }
+    
+    // Toggle favorite status
+    function toggleFavorite(propertyId, button) {
+      const index = favorites.indexOf(propertyId);
+      if (index === -1) {
+        favorites.push(propertyId);
+        button.innerHTML = '<i class="fas fa-heart" style="color: #e74c3c;"></i>';
+      } else {
+        favorites.splice(index, 1);
+        button.innerHTML = '<i class="fas fa-heart" style="color: #95a5a6;"></i>';
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      
+      // If we're on the favorites tab, refresh the list
+      if (document.querySelector('.tab.active').dataset.tab === 'favorites') {
+        displayFavorites();
+      }
+    }
+    
+    // Display favorites
+    function displayFavorites() {
+      const favoritesList = document.getElementById('favoritesList');
+      
+      if (favorites.length === 0) {
+        favoritesList.innerHTML = `
+          <div class="no-results">
+            <i class="fas fa-heart-broken"></i>
+            <h3>No favorites yet</h3>
+            <p>Save properties by clicking the heart icon</p>
+          </div>
+        `;
+        return;
+      }
+      
+      favoritesList.innerHTML = '';
+      
+      const favoriteProperties = sampleProperties.filter(property => 
+        favorites.includes(property.id)
+      );
+      
+      favoriteProperties.forEach(property => {
+        const propertyCard = document.createElement('div');
+        propertyCard.className = 'property-card';
+        propertyCard.dataset.id = property.id;
+        
+        propertyCard.innerHTML = `
+          <div class="property-image">
+            <img src="${property.images[0]}" alt="${property.name}">
+            <span class="property-type">${getTypeName(property.type)}</span>
+            <button class="favorite-btn" data-id="${property.id}" style="
+              position: absolute;
+              top: 10px;
+              left: 10px;
+              background: rgba(255,255,255,0.8);
+              border: none;
+              border-radius: 50%;
+              width: 30px;
+              height: 30px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              cursor: pointer;
+              color: #e74c3c;
+              font-size: 16px;
+            ">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+          <div class="property-name">${property.name}</div>
+          <div class="property-address"><i class="fas fa-map-marker-alt"></i> ${property.address}</div>
+          <div class="property-rating">
+            <i class="fas fa-star"></i> ${property.rating} (${property.reviews} reviews)
+          </div>
+          <div class="property-price">₹${property.price}/month</div>
+          <button style="width: 100%; margin-top: 10px;" onclick="selectPropertyFromFavorites(${property.id})">
+            <i class="fas fa-book"></i> Book Now
+          </button>
+        `;
+        
+        favoritesList.appendChild(propertyCard);
+      });
+      
+      // Add event listeners to favorite buttons
+      document.querySelectorAll('.favorite-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const propertyId = parseInt(btn.dataset.id);
+          toggleFavorite(propertyId, btn);
+        });
+      });
+    }
+    
+    // Select property from favorites
+    function selectPropertyFromFavorites(propertyId) {
+      const property = sampleProperties.find(p => p.id === propertyId);
+      if (property) {
+        // Switch to search tab
+        document.querySelector('.tab[data-tab="search"]').click();
+        selectProperty(property);
+      }
     }
     
     // Show properties on map
@@ -358,11 +1022,58 @@
       markers.forEach(marker => map.removeLayer(marker));
       markers = [];
       
-      // Add new markers
+      // Add new markers with custom icons
       properties.forEach(property => {
-        const marker = L.marker([property.lat, property.lng])
+        const icon = L.divIcon({
+          html: `<div style="
+            background: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #3498db;
+            color: #3498db;
+            font-weight: bold;
+          ">₹${property.price/1000}k</div>`,
+          className: '',
+          iconSize: [30, 30]
+        });
+        
+        const marker = L.marker([property.lat, property.lng], { icon })
           .addTo(map)
-          .bindPopup(`<b>${property.name}</b><br>₹${property.price}/month`);
+          .bindPopup(`
+            <div style="width: 200px;">
+              <b>${property.name}</b><br>
+              <small>${property.address}</small><br>
+              <div style="margin: 5px 0;">
+                <span style="color: #27ae60; font-weight: bold;">₹${property.price}/month</span>
+                <span style="float: right; color: #f39c12;">
+                  <i class="fas fa-star"></i> ${property.rating}
+                </span>
+              </div>
+              <div>
+                ${property.amenities.slice(0, 3).map(a => `
+                  <span style="display: inline-block; background: #e0f7fa; color: #00838f; padding: 2px 8px; border-radius: 12px; font-size: 0.8em; margin-right: 5px; margin-top: 5px;">
+                    ${a}
+                  </span>
+                `).join('')}
+              </div>
+              <button onclick="selectPropertyFromMap(${property.id})" style="
+                width: 100%;
+                margin-top: 10px;
+                background: #3498db;
+                color: white;
+                border: none;
+                padding: 5px;
+                border-radius: 4px;
+                cursor: pointer;
+              ">
+                View Details
+              </button>
+            </div>
+          `);
         
         marker.on('click', () => {
           // Highlight the corresponding card
@@ -385,6 +1096,14 @@
       }
     }
     
+    // Select property from map popup
+    function selectPropertyFromMap(propertyId) {
+      const property = sampleProperties.find(p => p.id === propertyId);
+      if (property) {
+        selectProperty(property);
+      }
+    }
+    
     // Select a property for booking
     function selectProperty(property) {
       selectedProperty = property;
@@ -400,17 +1119,110 @@
       // Show booking form
       document.getElementById('resultsContainer').style.display = 'none';
       document.getElementById('bookingForm').style.display = 'block';
+      document.getElementById('confirmationMessage').style.display = 'none';
+      
+      // Reset tabs in booking form
+      document.querySelectorAll('#bookingForm .tab').forEach((tab, index) => {
+        tab.classList.remove('active');
+        if (index === 0) tab.classList.add('active');
+      });
+      document.querySelectorAll('#bookingForm .tab-content').forEach((content, index) => {
+        content.classList.remove('active');
+        if (index === 0) content.classList.add('active');
+      });
       
       // Set property info
       document.getElementById('selectedPropertyInfo').innerHTML = `
-        <div class="property-name">${property.name}</div>
-        <div class="property-address">${property.address}</div>
-        <div class="property-price">₹${property.price}/month</div>
+        <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+          <div style="width: 100px; height: 80px; border-radius: 6px; overflow: hidden;">
+            <img src="${property.images[0]}" alt="${property.name}" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div>
+            <div class="property-name">${property.name}</div>
+            <div class="property-address"><i class="fas fa-map-marker-alt"></i> ${property.address}</div>
+            <div class="property-price">₹${property.price}/month</div>
+          </div>
+        </div>
+      `;
+      
+      // Set property details
+      document.getElementById('propertyDetails').innerHTML = `
+        <h3><i class="fas fa-info-circle"></i> About This Property</h3>
+        <p>${property.description}</p>
+        
+        <h3 style="margin-top: 20px;"><i class="fas fa-list"></i> Features</h3>
+        <div class="detail-item">
+          <div class="detail-label">Property Type</div>
+          <div class="detail-value">${getTypeName(property.type)}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Available From</div>
+          <div class="detail-value">${property.features.available}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Beds</div>
+          <div class="detail-value">${property.features.beds}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Bathroom</div>
+          <div class="detail-value">${property.features.bath}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Area</div>
+          <div class="detail-value">${property.features.area}</div>
+        </div>
+        
+        <h3 style="margin-top: 20px;"><i class="fas fa-check-circle"></i> Amenities</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+          ${property.amenities.map(a => `
+            <div style="display: flex; align-items: center; gap: 5px; background: #f8f9fa; padding: 5px 10px; border-radius: 20px;">
+              <i class="${getAmenityIcon(a)}" style="color: #3498db;"></i>
+              <span>${a}</span>
+            </div>
+          `).join('')}
+        </div>
       `;
       
       // Set today's date as min for checkin
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('checkin').min = today;
+      
+      // Update price calculation
+      updatePriceCalculation();
+    }
+    
+    // Update price calculation
+    function updatePriceCalculation() {
+      if (!selectedProperty) return;
+      
+      const checkin = new Date(document.getElementById('checkin').value);
+      const checkout = new Date(document.getElementById('checkout').value);
+      
+      if (isNaN(checkin.getTime()) || isNaN(checkout.getTime())) return;
+      
+      // Calculate number of months
+      const monthsDiff = (checkout.getFullYear() - checkin.getFullYear()) * 12 + 
+                         (checkout.getMonth() - checkin.getMonth());
+      
+      const priceBreakdown = document.getElementById('priceBreakdown');
+      priceBreakdown.innerHTML = `
+        <div class="price-row">
+          <span>Monthly Rent (${selectedProperty.price}/month)</span>
+          <span>₹${selectedProperty.price * monthsDiff}</span>
+        </div>
+        <div class="price-row">
+          <span>Security Deposit (1 month)</span>
+          <span>₹${selectedProperty.price}</span>
+        </div>
+        <div class="price-row">
+          <span>Maintenance Fees</span>
+          <span>₹500</span>
+        </div>
+        <div class="price-row price-total">
+          <span>Total Amount</span>
+          <span>₹${selectedProperty.price * monthsDiff + selectedProperty.price + 500}</span>
+        </div>
+      `;
     }
     
     // Confirm booking
@@ -432,48 +1244,81 @@
         return;
       }
       
+      // Calculate total price
+      const checkinDate = new Date(checkin);
+      const checkoutDate = new Date(checkout);
+      const monthsDiff = (checkoutDate.getFullYear() - checkinDate.getFullYear()) * 12 + 
+                         (checkoutDate.getMonth() - checkinDate.getMonth());
+      const totalPrice = selectedProperty.price * monthsDiff + selectedProperty.price + 500;
+      
       // In a real app, we would send this to a server
       const bookingDetails = {
         property: selectedProperty,
         checkin,
         checkout,
         guests,
-        customer: { name, email, phone }
+        customer: { name, email, phone },
+        totalPrice
       };
       
       console.log('Booking confirmed:', bookingDetails);
       
-      alert(`Booking confirmed for ${selectedProperty.name}!\nWe've sent details to ${email}`);
-      
-      // Reset the form
-      resetForm();
+      // Show confirmation message
+      document.getElementById('bookingForm').style.display = 'none';
+      document.getElementById('confirmationMessage').style.display = 'block';
+      document.getElementById('confirmationDetails').innerHTML = `
+        You've successfully booked <strong>${selectedProperty.name}</strong>.<br>
+        Check-in: ${formatDate(checkin)} | Check-out: ${formatDate(checkout)}<br>
+        Total amount: <strong>₹${totalPrice}</strong><br><br>
+        A confirmation has been sent to <strong>${email}</strong>.
+      `;
+    }
+    
+    // Format date for display
+    function formatDate(dateString) {
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
     }
     
     // Back to results from booking form
     function backToResults() {
       document.getElementById('bookingForm').style.display = 'none';
+      document.getElementById('confirmationMessage').style.display = 'none';
       document.getElementById('resultsContainer').style.display = 'block';
     }
     
     // Reset the form
     function resetForm() {
       document.getElementById('bookingForm').style.display = 'none';
+      document.getElementById('confirmationMessage').style.display = 'none';
       document.getElementById('resultsContainer').style.display = 'none';
-      document.getElementById('searchBtn').click();
+      document.getElementById('noResults').style.display = 'none';
+      
+      // Reset form fields
+      document.getElementById('location').value = '';
+      document.getElementById('university').value = '';
+      document.getElementById('distance').value = '';
+      document.getElementById('room-type').value = '';
+      
+      // Reset checkboxes
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.checked = false;
+      });
+      
+      // Switch to search tab
+      document.querySelector('.tab[data-tab="search"]').click();
+      
+      // Clear map markers
+      markers.forEach(marker => map.removeLayer(marker));
+      markers = [];
     }
     
-    // Event listeners
-    document.getElementById('searchBtn').addEventListener('click', searchAccommodations);
-    document.getElementById('confirmBookingBtn').addEventListener('click', confirmBooking);
-    document.getElementById('backToResultsBtn').addEventListener('click', backToResults);
+    // Initialize the app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', init);
     
-    // Set today's date as default for checkin
-    document.getElementById('checkin').value = new Date().toISOString().split('T')[0];
-    
-    // Set tomorrow's date as default for checkout
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    document.getElementById('checkout').value = tomorrow.toISOString().split('T')[0];
+    // Make functions available globally for HTML onclick attributes
+    window.selectPropertyFromMap = selectPropertyFromMap;
+    window.selectPropertyFromFavorites = selectPropertyFromFavorites;
   </script>
 </body>
 </html>
