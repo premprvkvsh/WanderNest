@@ -263,27 +263,25 @@
 </head>
 <body class="bg-white font-roboto min-h-screen">
   <!-- Permanent Navbar -->
-  <!-- Navigation -->
   <nav class="navbar bg-white sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex items-center">
-          <a href="index.html" class="logo text-xl font-bold font-playfair text-gray-900 flex items-center">
-            <i class="fas fa-map-marker-alt logo-icon text-indigo-600 mr-2"></i>
+          <a href="index.html" class="text-xl font-bold font-playfair text-gray-900 hover:text-indigo-600 transition-colors duration-200">
             Wander<span class="text-indigo-600">Nest</span>
           </a>
         </div>
         <div class="hidden md:flex items-center space-x-8">
-          <a href="index.html" class="nav-link current px-1 pt-1 text-sm font-medium text-gray-900">Home</a>
-          <a href="about.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">About</a>
-          <a href="services.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Services</a>
-          <a href="contact.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Contact</a>
-          <a href="wandernest.html" class="ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200">
+          <a href="index.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">Home</a>
+          <a href="about.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">About</a>
+          <a href="services.html" class="nav-link current px-1 pt-1 text-sm font-medium text-gray-900">Services</a>
+          <a href="contact.html" class="nav-link px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">Contact</a>
+          <a href="wandernest.html" class="ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200 shadow-sm hover:shadow-md">
             Book Now
           </a>
         </div>
         <div class="-mr-2 flex md:hidden">
-          <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
+          <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none transition-colors duration-200">
             <span class="sr-only">Open main menu</span>
             <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -296,17 +294,16 @@
     <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
       <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="index.html" class="block px-3 py-2 text-base font-medium text-indigo-600 bg-indigo-50 current">Home</a>
-        <a href="about.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">About</a>
-        <a href="services.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">Services</a>
-        <a href="contact.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50">Contact</a>
-        <a href="#booking" class="block w-full px-3 py-2 mt-2 text-center text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md">
+        <a href="index.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200">Home</a>
+        <a href="about.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200">About</a>
+        <a href="services.html" class="block px-3 py-2 text-base font-medium text-indigo-600 bg-indigo-50 current">Services</a>
+        <a href="contact.html" class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200">Contact</a>
+        <a href="index.html#booking" class="block w-full px-3 py-2 mt-2 text-center text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors duration-200 shadow-sm hover:shadow-md">
           Book Now
         </a>
       </div>
     </div>
   </nav>
-
 
   <div class="max-w-6xl mx-auto p-4 md:p-8">
     <h1 class="text-4xl md:text-5xl font-bold font-playfair mt-6 mb-8 text-gray-800 text-center section-header">
@@ -328,7 +325,7 @@
         <h3 class="text-xl font-bold text-center mb-3 text-gray-800">AI Recommendations</h3>
         <p class="text-gray-600 text-center">Smart AI algorithms suggest perfect accommodations based on your preferences and behavior patterns.</p>
         <div class="mt-6 flex justify-center">
-          <a href="https://www.ibm.com/think/topics/recommendation-engine" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200 transition-colors duration-200 text-sm font-medium inline-flex items-center">
+          <a href="https://www.ibm.com/think/topics/recommendation-engine" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-300 transition-colors duration-200 text-sm font-medium inline-flex items-center">
             Learn More <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
@@ -337,7 +334,7 @@
       </div>
       
       <!-- Service Card 2 -->
-      <div class="service-card bg-green-100 rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer">
+      <div class="service-card bg-green-200 rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer">
         <div class="service-icon w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mb-4 mx-auto">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -347,7 +344,7 @@
         <h3 class="text-xl font-bold text-center mb-3 text-gray-800">Smart Mapping</h3>
         <p class="text-gray-600 text-center">Interactive maps with clustering to find nearby accommodations in your desired area with distance calculations.</p>
         <div class="mt-6 flex justify-center">
-          <a href="https://www.ibm.com/docs/en/wm-integration?topic=services-smart-mapping" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-green-200 text-green-600 rounded-full hover:bg-green-400 text-grey-950 transition-colors duration-200 text-sm font-medium inline-flex items-center">
+          <a href="https://www.ibm.com/docs/en/wm-integration?topic=services-smart-mapping" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-green-100 text-green-600 rounded-full hover:bg-green-400 text-grey-950 transition-colors duration-200 text-sm font-medium inline-flex items-center">
             Learn More <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
@@ -356,7 +353,7 @@
       </div>
       
       <!-- Service Card 3 -->
-      <div class="service-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer">
+      <div class="service-card bg-purple-200 rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer">
         <div class="service-icon w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-4 mx-auto">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -365,7 +362,7 @@
         <h3 class="text-xl font-bold text-center mb-3 text-gray-800">AI Travel Guide</h3>
         <p class="text-gray-600 text-center">24/7 AI chatbot provides personalized travel advice, answers questions, and helps plan your itinerary.</p>
         <div class="mt-6 flex justify-center">
-          <a href="chatbot.html" class="px-4 py-2 bg-purple-100 text-purple-600 rounded-full hover:bg-purple-200 transition-colors duration-200 text-sm font-medium inline-flex items-center">
+          <a href="chatbot.html" class="px-4 py-2 bg-purple-100 text-purple-600 rounded-full hover:bg-purple-300 transition-colors duration-200 text-sm font-medium inline-flex items-center">
             Try Wander AI <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
@@ -374,7 +371,7 @@
       </div>
       
       <!-- Service Card 4 -->
-      <div class="service-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer">
+      <div class="service-card bg-yellow-200 rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer">
         <div class="service-icon w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center mb-4 mx-auto">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -385,7 +382,7 @@
         <h3 class="text-xl font-bold text-center mb-3 text-gray-800">Student Focused</h3>
         <p class="text-gray-600 text-center">Special filters to find accommodations with distance calculations to universities and student-friendly pricing.</p>
         <div class="mt-6 flex justify-center">
-          <a href="wandernest.html" class="px-4 py-2 bg-yellow-100 text-yellow-600 rounded-full hover:bg-yellow-200 transition-colors duration-200 text-sm font-medium inline-flex items-center">
+          <a href="wandernest.html" class="px-4 py-2 bg-yellow-100 text-yellow-600 rounded-full hover:bg-yellow-300 transition-colors duration-200 text-sm font-medium inline-flex items-center">
             Explore Options <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
